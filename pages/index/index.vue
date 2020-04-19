@@ -1,0 +1,528 @@
+<template>
+	<view class="view-page  flex-direction">
+		<div class="top bg-white">
+			<div class="userinfo flex align-center">
+				<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
+				<view>
+					<view class="name">{{userinfo.stuName}}</view>
+					<view>{{userinfo.className}}</view>
+					<view class="cu-tag bg-white round">{{userinfo.className}}</view>
+				</view>
+			</div>
+			<div class="rili bg-white">
+				<div class="title flex justify-between align-center">
+					<span class="arrow" @tap="prevweek"><text class="cuIcon-back"></text></span>
+					<span>{{nowYear}}年{{nowMonth}}月第{{nowWeek}}周</span>
+					<span class="arrow" @tap="nextweek"><text class="cuIcon-right"></text></span>
+				</div>
+				<div class="rili-hd flex">
+					<text class="flex-sub">一</text>
+					<text class="flex-sub">二</text>
+					<text class="flex-sub">三</text>
+					<text class="flex-sub">四</text>
+					<text class="flex-sub">五</text>
+					<text class="flex-sub">六</text>
+					<text class="flex-sub">日</text>
+				</div>
+				<div class="rili-bd flex ">
+					<span class="flex-sub" v-for="(day,index) in daylist" :key="index" @tap="checkday(index)"><text :class="{active:day.isCheck,disable:day.isdisable}">{{day.day}}</text></span>
+				</div>
+			</div>
+		</div>
+		<div class="flex-sub main">
+			<view class="bg-white">
+				<view class="cu-bar ">
+					<view class="action">
+						<text class="cuIcon-titles "></text>
+						<text>课程详情</text>
+					</view>
+				</view>
+				<view class="topiclist ">
+					<view class="topic-item flex align-center" @tap="showDetails" v-for="(item,index) in topiclist" :key="index">
+						<view class="name">语文</view>
+						<view class="flex-sub">
+							<view>
+								<text class="cuIcon-title"></text>
+								<text>8:00-8:40 / {{item.teacherName}}老师</text>
+							</view>
+							<view>
+								<text class="cuIcon-title"></text>
+								<text>主题：{{item.topicName}}</text>
+							</view>
+
+						</view>
+						<view>
+							<view class="text-red">
+								<text class="ft40">{{item.correctPercent.slice(0,item.correctPercent.length-1)}}</text>
+								<text class="ft20">%</text>
+							</view>
+							<view>正确率</view>
+						</view>
+					</view>
+				</view>
+				<!-- <view class="more" >查看更多>></view> -->
+			</view>
+			<view class="bg-white mt15">
+				<view class="cu-bar">
+					<view class="action">
+						<text class="cuIcon-titles "></text>
+						<text>进步趋势</text>
+					</view>
+					<view class="action selectTime">
+						<picker mode="date" :value="startdate" start="2015-09-01" end="2020-09-01" @change="startDateChange">
+							<view class="picker">
+								{{startdate?startdate:'请选择开始日期'}}
+							</view>
+						</picker>
+						<text>-</text>
+						<picker mode="date" :value="enddate" start="2015-09-01" end="2020-09-01" @change="endDateChange">
+							<view class="picker">
+								{{enddate?enddate:'请选择结束日期'}}
+							</view>
+						</picker>
+						<image src="/static/icon5.png" mode="widthFix"></image>
+					</view>
+				</view>
+				<view class="navbar flex justify-center">
+					<span class="active">语文</span>
+					<span>数学</span>
+				</view>
+				<view class="cu-card">
+					<view class="cu-item shadow">
+						<canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
+					</view>
+				</view>
+			</view>
+		</div>
+	</view>
+</template>
+
+<script>
+	import dayjs from '@/utils/dayjs.min.js'
+	import {
+		api,
+		postajax
+	} from '@/utils/api.js'
+	import uCharts from '@/components/u-charts/u-charts.js';
+	var _self;
+	var canvaLineA = null;
+	export default {
+		data() {
+			return {
+				cWidth: '',
+				cHeight: '',
+				pixelRatio: 1,
+				textarea: '',
+				startdate: null,
+				enddate: null,
+				daylist: [],
+				nowYear: '',
+				nowMonth: '',
+				nowWeek: '',
+				vNowDate: dayjs(),
+				selectTime: '',
+				today: dayjs(),
+				topiclist: [{
+					"topicCode": "463f8e6d3c814958ba3a720c72066550",
+					"topicName": "分地方撒",
+					"classCode": "38af121b79b547b2b780a01d978869f2",
+					"teacherCode": "579",
+					"teacherName": "閤",
+					"correctPercent": "50.00%"
+				}],
+				userinfo: null
+			}
+		},
+		onLoad() {
+			_self = this;
+			//#ifdef MP-ALIPAY
+			uni.getSystemInfo({
+				success: function(res) {
+					if (res.pixelRatio > 1) {
+						//正常这里给2就行，如果pixelRatio=3性能会降低一点
+						//_self.pixelRatio =res.pixelRatio;
+						_self.pixelRatio = 2;
+					}
+				}
+			});
+			//#endif
+			this.cWidth = uni.upx2px(700);
+			this.cHeight = uni.upx2px(500);
+			this.getServerData();
+			console.log('登录首页了');
+			this.getUserinfo();
+			this.getdaylist(this.vNowDate);
+			this.gettopiclist();
+			this.advanceProgress();
+			this.selectTime = dayjs().format('YYYY-MM-DD')
+		},
+		onPullDownRefresh() {
+			console.log('refresh');
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 1000);
+		},
+		methods: {
+			prevweek() {
+				var vNowDate = this.vNowDate.subtract(7, "day")
+				this.getdaylist(vNowDate)
+			},
+			nextweek() {
+				var vNowDate = this.vNowDate.add(7, "day")
+				this.getdaylist(vNowDate)
+			},
+			getdaylist(dayjs) {
+				var vNowDate = dayjs;
+				this.enddate = vNowDate.format('YYYY-MM-DD')
+				if (vNowDate.day() == 0) {
+					vNowDate = vNowDate.subtract(7, "day")
+				}
+				this.vNowDate = vNowDate;
+				this.daylist = [];
+				for (var i = 1; i <= 7; i++) {
+					var item = {
+						allday: vNowDate.day(i).format('YYYY-MM-DD'),
+						day: vNowDate.day(i).format('D'),
+						isCheck: false
+					}
+
+					if (vNowDate.day(i).isAfter(vNowDate)) {
+						item.isdisable = true;
+					} else {
+						item.isdisable = false;
+						if (vNowDate.day(i).isSame(vNowDate)) {
+							item.isCheck = true;
+						}
+					}
+
+					this.daylist.push(item)
+				}
+				this.startdate = this.daylist[0].allday;
+				this.nowYear = this.vNowDate.year();
+				this.nowMonth = this.vNowDate.month() + 1;
+				this.nowWeek = Math.ceil((this.vNowDate.date() + 6 - (this.vNowDate.day() == 0 ? 7 : this.vNowDate.day())) / 7);
+			},
+			gettopiclist() {
+				/* 查询主题列表 */
+				postajax(api.gettopiclist, {
+					"stuCode": "25dacf6dc11c482587ad84c84ceb9ad7",
+					"queryDate": "2020-04-02"
+				}).then(da => {
+					{
+						console.log(da)
+						if (da.code == 0 && da.data && da.data.length > 0) {
+							this.topiclist = da.data;
+						}
+					}
+				})
+			},
+			advanceProgress() {
+				/* 进步趋势 */
+				postajax(api.advanceProgress, {
+					"queryStartDate": "2020-04-01 00:00:00",
+					"queryEndDate": "2020-04-02 23:59:59",
+					"classCode": "38af121b79b547b2b780a01d978869f2",
+					"stuCode": "25dacf6dc11c482587ad84c84ceb9ad7"
+				}).then(da => {
+					{
+						console.log(da)
+						if (da.code == 0 && da.data && da.data.length > 0) {
+							// this.topiclist = da.data;
+						}
+					}
+				})
+			},
+			checkday(index) {
+				/* 先判断是否可以点击 */
+				if (!this.daylist[index].isdisable) {
+					this.daylist.forEach((item, subindex) => {
+						if (index == subindex) {
+							item.isCheck = true;
+							this.selectTime = item.allday;
+						} else {
+							item.isCheck = false
+						}
+					})
+				}
+			},
+			getUserinfo() {
+				postajax(api.getuserinfo).then(da => {
+					{
+						console.log(da)
+						if (da.code == 0 && da.data && da.data.length > 0) {
+							this.userinfo = da.data[0];
+							uni.setStorageSync('userinfo', da.data[0])
+						}
+					}
+				})
+			},
+			getServerData() {
+				let LineA = {
+					categories: [],
+					series: []
+				};
+				//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
+				LineA.categories = ['11', '12', '13', '14'];
+				LineA.series = [{
+					'name': '进步趋势',
+					data: [20, 21, 32, 23]
+				}];
+				_self.showLineA("canvasLineA", LineA);
+
+			},
+			showLineA(canvasId, chartData) {
+				canvaLineA = new uCharts({
+					$this: _self,
+					canvasId: canvasId,
+					type: 'line',
+					fontSize: 11,
+					padding: [15, 20, 0, 15],
+					legend: {
+						show: true,
+						padding: 5,
+						lineHeight: 11,
+						margin: 0,
+					},
+					dataLabel: true,
+					dataPointShape: true,
+					background: '#FFFFFF',
+					pixelRatio: _self.pixelRatio,
+					categories: chartData.categories,
+					series: chartData.series,
+					animation: true,
+					xAxis: {
+						type: 'grid',
+						gridColor: '#CCCCCC',
+						gridType: 'dash',
+						dashLength: 8,
+						boundaryGap: 'justify'
+					},
+					yAxis: {
+						gridType: 'dash',
+						gridColor: '#CCCCCC',
+						dashLength: 8,
+						splitNumber: 5,
+						format: (val) => {
+							return val.toFixed(0) + '%'
+						}
+					},
+					width: _self.cWidth * _self.pixelRatio,
+					height: _self.cHeight * _self.pixelRatio,
+					extra: {
+						line: {
+							type: 'curve'
+						}
+					}
+				});
+
+			},
+			touchLineA(e) {
+				canvaLineA.touchLegend(e);
+				canvaLineA.showToolTip(e, {
+					format: function(item, category) {
+						return category + ' ' + item.name + ':' + item.data
+					}
+				});
+			},
+			startDateChange(e) {
+				this.startdate = e.detail.value.replace(/-/g, '.')
+			},
+			endDateChange(e) {
+				this.enddate = e.detail.value.replace(/-/g, '.')
+			},
+			showDetails() {
+				uni.navigateTo({
+					url: '/pages/classdetails/classdetails'
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	.view-page {
+		.mt15 {
+			margin-top: 15upx;
+		}
+
+		position: relative;
+		// height: 100%;
+		// overflow: auto;
+		background: #f7f7fc;
+
+		.userinfo {
+			background: #81a3e2;
+			padding: 40upx 36upx 18upx;
+			color: #fff;
+			font-size: 24upx;
+
+			.cu-avatar {
+				border: 5upx solid #fff;
+				height: 120upx;
+				width: 120upx;
+				margin-right: 15upx;
+			}
+
+			.name {
+				font-size: 30upx;
+			}
+
+			.cu-tag {
+				color: #333;
+				font-size: 20upx;
+				height: 30upx;
+				margin-top: 5upx;
+			}
+		}
+
+		.rili {
+			text-align: center;
+
+			.title {
+				color: #333;
+				font-size: 30upx;
+				line-height: 60upx;
+				padding: 0 20upx;
+
+				.arrow {
+					color: #999;
+					font-size: 40upx;
+					padding: 0 10upx;
+				}
+			}
+
+			.rili-hd {
+				background: #ececf2;
+				line-height: 50upx;
+				color: #333;
+				font-size: 24upx;
+			}
+
+			.rili-bd {
+				text {
+					height: 60upx;
+					width: 60upx;
+					line-height: 60upx;
+					border-radius: 100%;
+					display: block;
+					color: #333;
+					margin: 24upx auto;
+					background: #d1d1e9;
+
+					&.disable {
+						background: #ececf2;
+					}
+
+					&.active {
+						background: #81a3e2;
+						color: #fff;
+					}
+				}
+			}
+		}
+
+		.main {
+			// overflow: auto;
+			// height: 100px;
+			margin-top: 16upx;
+			-webkit-overflow-scrolling: touch;
+
+			.cu-bar .cuIcon-titles {
+				color: #81a3e2;
+			}
+
+			.topiclist {
+				padding: 0 15px;
+
+				.topic-item {
+					padding: 30upx 0;
+					border-top: 1px solid #f7f7fc;
+					font-size: 22upx;
+					color: #333;
+
+					&:last-child {
+						border-bottom: 1px solid #f7f7fc;
+
+					}
+
+					.name {
+						color: #fff;
+						font-size: 24upx;
+						background: #e281b6;
+						border-radius: 100%;
+						height: 70upx;
+						width: 70upx;
+						text-align: center;
+						line-height: 70upx;
+						margin-right: 15upx;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
+
+					.text-red {}
+
+					.ft40 {
+						font-size: 40upx;
+						line-height: 30upx;
+					}
+
+					.ft20 {
+						font-size: 20upx;
+					}
+				}
+			}
+
+			.more {
+				color: #333;
+				font-size: 18upx;
+				text-align: center;
+				line-height: 60upx;
+			}
+
+			.navbar {
+				padding: 25upx 0 0;
+				font-size: 20upx;
+				color: #333;
+
+				span {
+					padding: 0 16upx;
+					line-height: 36upx;
+					margin: 0 10upx;
+					display: inline-block;
+					border-radius: 50upx;
+
+					&.active {
+						color: #fff;
+						background: #81a3e2;
+					}
+				}
+			}
+
+			.shadow {
+				box-shadow: 0 0 8upx rgba(0, 0, 0, 0.2);
+			}
+
+			.selectTime {
+				border: 1px solid #f2f2f4;
+				border-radius: 10upx;
+				line-height: 44upx;
+				color: #666;
+				font-size: 20upx;
+				padding: 0 10upx 0 20upx;
+
+				image {
+					width: 25upx;
+					margin-left: 20upx;
+				}
+			}
+		}
+
+		.charts {
+			width: 750upx;
+			height: 500upx;
+			background-color: #FFFFFF;
+			position: relative;
+		}
+	}
+</style>

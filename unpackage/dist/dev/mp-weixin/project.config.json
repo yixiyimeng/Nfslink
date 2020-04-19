@@ -1,0 +1,57 @@
+{
+	"description": "项目配置文件。",
+	"packOptions": {
+		"ignore": []
+	},
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"minified": true
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.9.2",
+	"appid": "wxcf446a6868a19b8b",
+	"projectname": "Nfslink",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"current": -1,
+			"list": []
+		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": [
+				{
+					"id": -1,
+					"name": "pages/index/index",
+					"pathName": "pages/index/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/classdetails/classdetails",
+					"pathName": "pages/classdetails/classdetails",
+					"scene": null
+				}
+			]
+		}
+	}
+}

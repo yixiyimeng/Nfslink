@@ -1,0 +1,21 @@
+
+.view-page {
+	padding-top: 230rpx;
+}
+.view-page image {
+	width: 427rpx;
+	display: block;
+	margin: 0 auto;
+}
+.view-page .btn {
+	color: #fff;
+	background: #4944ff;
+	width: 300rpx;
+	line-height: 80rpx;
+	display: block;
+	text-align: center;
+	margin: 40rpx auto 0;
+	border-radius: 100rpx;
+	font-size:40rpx;
+}
+

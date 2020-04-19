@@ -1,0 +1,1 @@
+<view class="view-page"><image src="/static/login.png" mode="widthFix"></image><navigator class="btn" url="/pages/login/login">登录</navigator></view>

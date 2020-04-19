@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/classdetails/classdetails",
+    "pages/splash/splash",
+    "pages/forgetpwd/forgetpwd",
+    "pages/homework/homework"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarBackgroundColor": "#fcf9f0",
+    "navigationBarTitleText": "家校通",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#7f8389",
+    "selectedColor": "#175ee3",
+    "borderStyle": "black",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "/static/tabbar/home.png",
+        "selectedIconPath": "/static/tabbar/home_cur.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/homework/homework",
+        "iconPath": "/static/tabbar/user.png",
+        "selectedIconPath": "/static/tabbar/user_cur.png",
+        "text": "作业"
+      }
+    ]
+  },
+  "usingComponents": {}
+}
