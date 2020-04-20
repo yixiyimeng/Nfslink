@@ -5,11 +5,10 @@
 	},
 	"setting": {
 		"urlCheck": false,
-		"es6": true,
-		"minified": true
+		"postcss": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.9.2",
+	"libVersion": "2.7.0",
 	"appid": "wxcf446a6868a19b8b",
 	"projectname": "Nfslink",
 	"simulatorType": "wechat",
@@ -42,13 +41,6 @@
 					"id": -1,
 					"name": "pages/index/index",
 					"pathName": "pages/index/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/classdetails/classdetails",
-					"pathName": "pages/classdetails/classdetails",
 					"scene": null
 				}
 			]

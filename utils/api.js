@@ -14,7 +14,9 @@ export const api = {
 	getuserinfo:'/foun/student/list_by_curr_login_parents_role',
 	gettopiclist:'/inte/homeSchool/courseDetail',//主题列表
 	advanceProgress:'/inte/homeSchool/advanceProgress',//进步趋势
-	studentAnalyseDetail:'/inte/homeSchool/studentAnalyseDetail'
+	studentAnalyseDetail:'/inte/homeSchool/studentAnalyseDetail',//答题记录
+	getvoiceRecord:'/inte/homeSchool/voiceRecord',//语言记录
+	getDatePullList:'/inte/homeSchool/getDatePullList'
 }
 export function getajax(url) {
 	return $http.get(url)

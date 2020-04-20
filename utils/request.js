@@ -14,6 +14,7 @@ request.interceptors.request.use((request) => {
 	uni.showLoading({
 		title: '拼命加载中...'
 	})
+	request.withCredentials=true;
 	return request
 })
 

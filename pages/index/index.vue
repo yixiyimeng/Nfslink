@@ -38,12 +38,12 @@
 					</view>
 				</view>
 				<view class="topiclist ">
-					<view class="topic-item flex align-center" @tap="showDetails" v-for="(item,index) in topiclist" :key="index">
-						<view class="name">语文</view>
+					<view class="topic-item flex align-center" @tap="showDetails(item)" v-for="(item,index) in topiclist" :key="index">
+						<view class="name">{{item.subjectName}}</view>
 						<view class="flex-sub">
 							<view>
 								<text class="cuIcon-title"></text>
-								<text>8:00-8:40 / {{item.teacherName}}老师</text>
+								<text>{{item.startDatetime|filterTime}}-{{item.endDatetime|filterTime}} / {{item.teacherName}}老师</text>
 							</view>
 							<view>
 								<text class="cuIcon-title"></text>
@@ -53,7 +53,7 @@
 						</view>
 						<view>
 							<view class="text-red">
-								<text class="ft40">{{item.correctPercent.slice(0,item.correctPercent.length-1)}}</text>
+								<text class="ft40">{{item.correctPercent|filternum}}</text>
 								<text class="ft20">%</text>
 							</view>
 							<view>正确率</view>
@@ -83,10 +83,10 @@
 						<image src="/static/icon5.png" mode="widthFix"></image>
 					</view>
 				</view>
-				<view class="navbar flex justify-center">
+				<!-- <view class="navbar flex justify-center">
 					<span class="active">语文</span>
 					<span>数学</span>
-				</view>
+				</view> -->
 				<view class="cu-card">
 					<view class="cu-item shadow">
 						<canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
@@ -130,7 +130,7 @@
 					"teacherName": "閤",
 					"correctPercent": "50.00%"
 				}],
-				userinfo: null
+				userinfo: {}
 			}
 		},
 		onLoad() {
@@ -148,28 +148,32 @@
 			//#endif
 			this.cWidth = uni.upx2px(700);
 			this.cHeight = uni.upx2px(500);
-			this.getServerData();
-			console.log('登录首页了');
-			this.getUserinfo();
-			this.getdaylist(this.vNowDate);
-			this.gettopiclist();
-			this.advanceProgress();
-			this.selectTime = dayjs().format('YYYY-MM-DD')
+			this.init();
 		},
 		onPullDownRefresh() {
-			console.log('refresh');
+			this.init();
 			setTimeout(function() {
 				uni.stopPullDownRefresh();
 			}, 1000);
 		},
 		methods: {
+			init() {
+				this.getUserinfo();
+				this.getdaylist(this.vNowDate);
+				this.gettopiclist();
+				this.advanceProgress();
+				this.selectTime = dayjs().format('YYYY-MM-DD')
+				this.getDatePullList();
+			},
 			prevweek() {
 				var vNowDate = this.vNowDate.subtract(7, "day")
 				this.getdaylist(vNowDate)
+				this.getDatePullList()
 			},
 			nextweek() {
 				var vNowDate = this.vNowDate.add(7, "day")
-				this.getdaylist(vNowDate)
+				this.getdaylist(vNowDate);
+				this.getDatePullList()
 			},
 			getdaylist(dayjs) {
 				var vNowDate = dayjs;
@@ -186,7 +190,7 @@
 						isCheck: false
 					}
 
-					if (vNowDate.day(i).isAfter(vNowDate)) {
+					if (vNowDate.day(i).isAfter(this.today)) {
 						item.isdisable = true;
 					} else {
 						item.isdisable = false;
@@ -201,6 +205,30 @@
 				this.nowYear = this.vNowDate.year();
 				this.nowMonth = this.vNowDate.month() + 1;
 				this.nowWeek = Math.ceil((this.vNowDate.date() + 6 - (this.vNowDate.day() == 0 ? 7 : this.vNowDate.day())) / 7);
+			},
+			getDatePullList(){
+				postajax(api.getDatePullList, {
+					"stuCode": "25dacf6dc11c482587ad84c84ceb9ad7",
+					"queryStartTime": "2020-01-02 00:00:0",
+					"queryEndTime": "2020-04-20 23:59:59"
+				}).then(da => {
+					{
+						console.log('时间有返回吗')
+						console.log(da)
+						if (da.code == 0 && da.data && da.data.length > 0) {
+							console.log('shijian')
+							this.daylist.forEach(item=>{
+								var index=da.data.findIndex(subitem=>subitem.title==item)
+								if(index>-1){
+									item.isdisable=false;
+								}else{
+									item.isdisable=true;
+								}
+							})
+							console.log(this.daylist)
+						}
+					}
+				})
 			},
 			gettopiclist() {
 				/* 查询主题列表 */
@@ -226,8 +254,27 @@
 				}).then(da => {
 					{
 						console.log(da)
-						if (da.code == 0 && da.data && da.data.length > 0) {
+						if (da.code == 0 && da.data) {
 							// this.topiclist = da.data;
+							var trendTimeLineList = da.data.trendTimeLineList;
+							var categories = [];
+							var studentJoinAccuracy = [];
+							var studentCorrectAccuracy = [];
+							if (trendTimeLineList && trendTimeLineList.length > 0)
+								for (var i = 0; i < trendTimeLineList.length; i++) {
+									categories.push(trendTimeLineList[i].date)
+									studentJoinAccuracy.push(parseFloat(trendTimeLineList[i].studentCorrectAccuracy.replace(/%/, '')))
+									studentCorrectAccuracy.push(parseFloat(trendTimeLineList[i].studentJoinAccuracy.replace(/%/, '')))
+								}
+							var series = [{
+								data: studentCorrectAccuracy,
+								name: '综合正确率进步趋势'
+							}, {
+								data: studentJoinAccuracy,
+								name: '参与率进步趋势'
+							}]
+
+							this.getServerData(categories, series);
 						}
 					}
 				})
@@ -256,17 +303,14 @@
 					}
 				})
 			},
-			getServerData() {
+			getServerData(categories, series) {
 				let LineA = {
 					categories: [],
 					series: []
 				};
 				//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
-				LineA.categories = ['11', '12', '13', '14'];
-				LineA.series = [{
-					'name': '进步趋势',
-					data: [20, 21, 32, 23]
-				}];
+				LineA.categories = categories;
+				LineA.series = series;
 				_self.showLineA("canvasLineA", LineA);
 
 			},
@@ -304,7 +348,12 @@
 						splitNumber: 5,
 						format: (val) => {
 							return val.toFixed(0) + '%'
-						}
+						},
+						type: 'value',
+						max: 100,
+						min: 0
+
+
 					},
 					width: _self.cWidth * _self.pixelRatio,
 					height: _self.cHeight * _self.pixelRatio,
@@ -330,10 +379,31 @@
 			endDateChange(e) {
 				this.enddate = e.detail.value.replace(/-/g, '.')
 			},
-			showDetails() {
+			showDetails(obj) {
+				console.log(obj)
 				uni.navigateTo({
-					url: '/pages/classdetails/classdetails'
+					url: '/pages/classdetails/classdetails?info=' + encodeURIComponent(JSON.stringify(obj))
 				})
+			}
+		},
+		filters: {
+			filternum(value) {
+				let s = value;
+				console.log(value)
+				if (value && value.length > 0) {
+				
+					s = value.slice(0, value.length - 1)
+				}
+				return s
+			},
+			filterTime(value) {
+				let s = value;
+				console.log(value)
+				if (value && value.length > 0) {
+
+					s = value.slice(10, value.length)
+				}
+				return s
 			}
 		}
 	}

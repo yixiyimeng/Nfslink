@@ -29,8 +29,13 @@
 				focus: 0,
 				username: '',
 				password: ''
-				
+
 			};
+		},
+		onLoad() {
+			let loginParam = uni.getStorageSync('loginParam')
+			this.username=loginParam.username;
+			this.password=loginParam.password
 		},
 		methods: {
 			focustxt(type) {
@@ -41,16 +46,18 @@
 			},
 			login() {
 				if (this.password.trim() && this.username.trim()) {
-					postajax(api.login, {
+					var param = {
 						username: this.username.trim(),
 						password: this.password.trim()
-					}).then((da)=>{
+					}
+					postajax(api.login, param).then((da) => {
 						console.log(da)
-						if(da.code==0){
+						if (da.code == 0) {
+							uni.setStorageSync('loginParam', param)
 							uni.switchTab({
-								url:'/pages/index/index'
+								url: '/pages/index/index'
 							})
-							
+
 						}
 					})
 				} else {
@@ -86,7 +93,7 @@
 				background: #fff;
 				border: 1px solid #eee;
 				padding: 0 40upx;
-				
+
 
 				&.row {
 					margin-top: 20upx;
