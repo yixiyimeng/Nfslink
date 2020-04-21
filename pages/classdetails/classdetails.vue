@@ -8,7 +8,7 @@
 			<view class="name">
 				主题：{{topic.topicName}}
 			</view>
-			<view>{{topic.startDatetime}}-{{topic.endDatetime}}</view>
+			<view>{{topic.startDatetime||''}}-{{topic.endDatetime||''}}</view>
 		</div>
 		<div class="modbox">
 			<div class="flex justify-between userinfobox align-center">
@@ -18,7 +18,7 @@
 				</div>
 				<div class="userinfo">
 					<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
-					<view>{{detail.studentAnalyseDetail.stuName||'--'}}</view>
+					<view>{{userinfo.stuName||'--'}}</view>
 				</div>
 				<div class="flex-sub">
 					<div>累计积分</div>
@@ -130,10 +130,10 @@
 						<view class="table-td flex justify-between" v-for="(item,index) in voiceRecord" :key="index">
 							<view>{{index+1}}</view>
 							<view class="flex-sub">{{item.questionType}}</view>
-							<view class="flex-sub" @tap="playVideo(item.voiceFileUrl)">
+							<view class="flex-sub" @tap="playVideo(item.voiceFileUrl,0)">
 								<image src="../../static/icon7.png" mode="widthFix" class="notice"></image>
 							</view>
-							<view class="flex-sub">
+							<view class="flex-sub" @tap="playVideo(item.trueAnswer,1)">
 								<image src="../../static/icon6.png" mode="widthFix" class="notice"></image>
 							</view>
 						</view>
@@ -170,7 +170,8 @@
 				topic: {},
 				detail: {},
 				voiceRecord: [],
-				innerAudioContext: null
+				innerAudioContext: null,
+				userinfo: {}
 			}
 		},
 		onLoad(option) {
@@ -191,7 +192,7 @@
 			this.arcbarWidth = uni.upx2px(34);
 			this.cWidth = uni.upx2px(700); //这里要与样式的宽高对应
 			this.cHeight = uni.upx2px(500); //这里要与样式的宽高对应
-
+			this.userinfo = uni.getStorageSync('userinfo')
 			/* 获取主题信息 */
 			this.topic = JSON.parse(decodeURIComponent(option.info));
 			console.log(this.topic)
@@ -217,10 +218,10 @@
 				this.getvoiceRecord();
 			},
 			getstudentAnalyseDetail() {
-				
+
 				postajax(api.studentAnalyseDetail, {
 					"topicCode": this.topic.topicCode,
-					"stuCode": uni.getStorageSync('userinfo').stuCode
+					"stuCode": this.userinfo.stuCode
 				}).then(da => {
 					{
 						console.log(da)
@@ -241,12 +242,14 @@
 				//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
 				Arcbar2.series = [{
 					name: '正确率',
-					"data": this.detail.stuCorrectAccuracy?this.detail.stuCorrectAccuracy.slice(0, this.detail.stuCorrectAccuracy.length - 1) / 100:0,
+					"data": this.detail.stuCorrectAccuracy ? this.detail.stuCorrectAccuracy.slice(0, this.detail.stuCorrectAccuracy.length -
+						1) / 100 : 0,
 					"color": "#81a3e2"
 				}];
 				Arcbar3.series = [{
 					name: '击败人数比',
-					"data":this.detail.defeatStuCount? this.detail.defeatStuCount.slice(0, this.detail.defeatStuCount.length - 1) / 100:0,
+					"data": this.detail.defeatStuCount ? this.detail.defeatStuCount.slice(0, this.detail.defeatStuCount.length - 1) /
+						100 : 0,
 					"color": "#99c2cc"
 				}];
 				_self.showArcbar2("canvasArcbar2", Arcbar2);
@@ -327,275 +330,18 @@
 			getvoiceRecord() {
 				postajax(api.getvoiceRecord, {
 					"topicCode": this.topic.topicCode,
-					"stuCode": uni.getStorageSync('userinfo').stuCode
+					"stuCode":this.userinfo.stuCode
 				}).then(da => {
 					if (da.code == 0) {
-						this.voiceRecord = [{
-								"offset": null,
-								"limit": null,
-								"sort": null,
-								"order": null,
-								"id": "d4d5de9e81084b6bafc613e63dbbde63",
-								"organization": "248e9a6d0fc54077a7a4b6cac152a59e",
-								"organizationName": null,
-								"topicCode": "1a08bb013ef649a7bfd7ab3393cfb678",
-								"topicName": "12",
-								"schoolCode": "e2679f08a70c40a0a4b82ba0b9df0972",
-								"schoolName": "罗正测试校区",
-								"classCode": "0988357619804b7f8ab0958cd42103cf",
-								"className": "开发测试二班",
-								"classroomCode": null,
-								"classroomName": null,
-								"teacAssistantCode": "606",
-								"teacAssistantName": "罗正",
-								"directBroadcastCode": null,
-								"directBroadcastName": null,
-								"stuCode": "0eb1d97827b24f5eb56e35239173c986",
-								"stuName": "王五",
-								"uid": "2441077031",
-								"questionId": null,
-								"questionType": "7",
-								"trueAnswer": null,
-								"answer": null,
-								"answerResult": null,
-								"isCorrect": "N",
-								"score": null,
-								"speed": null,
-								"voiceFileUrl": "group1/M00/01/FA/wKgKfV34ecOADqSlAAAOoOTb-Ho372.mp3",
-								"answerDatetime": "2019-12-17 14:31:54",
-								"hardwareVersion": null,
-								"createUserCode": null,
-								"createUserName": null,
-								"updateUserCode": null,
-								"updateUserName": null,
-								"createTime": null,
-								"updateTime": null,
-								"remark": null,
-								"delFlag": null
-							},
-							{
-								"offset": null,
-								"limit": null,
-								"sort": null,
-								"order": null,
-								"id": "8de45857bfd94c81a7c29dbf0aa7ce7e",
-								"organization": "248e9a6d0fc54077a7a4b6cac152a59e",
-								"organizationName": null,
-								"topicCode": "1a08bb013ef649a7bfd7ab3393cfb678",
-								"topicName": "12",
-								"schoolCode": "e2679f08a70c40a0a4b82ba0b9df0972",
-								"schoolName": "罗正测试校区",
-								"classCode": "0988357619804b7f8ab0958cd42103cf",
-								"className": "开发测试二班",
-								"classroomCode": null,
-								"classroomName": null,
-								"teacAssistantCode": "606",
-								"teacAssistantName": "罗正",
-								"directBroadcastCode": null,
-								"directBroadcastName": null,
-								"stuCode": "0eb1d97827b24f5eb56e35239173c986",
-								"stuName": "王五",
-								"uid": "2441077031",
-								"questionId": null,
-								"questionType": "7",
-								"trueAnswer": null,
-								"answer": null,
-								"answerResult": null,
-								"isCorrect": "N",
-								"score": null,
-								"speed": null,
-								"voiceFileUrl": "group1/M00/01/FA/wKgKfV34ecOAagXOAAALYHqbAlc693.mp3",
-								"answerDatetime": "2019-12-17 14:29:45",
-								"hardwareVersion": null,
-								"createUserCode": null,
-								"createUserName": null,
-								"updateUserCode": null,
-								"updateUserName": null,
-								"createTime": null,
-								"updateTime": null,
-								"remark": null,
-								"delFlag": null
-							},
-							{
-								"offset": null,
-								"limit": null,
-								"sort": null,
-								"order": null,
-								"id": "d8ef5f3f9ef041c3bbb6fe251c363aa1",
-								"organization": "248e9a6d0fc54077a7a4b6cac152a59e",
-								"organizationName": null,
-								"topicCode": "1a08bb013ef649a7bfd7ab3393cfb678",
-								"topicName": "12",
-								"schoolCode": "e2679f08a70c40a0a4b82ba0b9df0972",
-								"schoolName": "罗正测试校区",
-								"classCode": "0988357619804b7f8ab0958cd42103cf",
-								"className": "开发测试二班",
-								"classroomCode": null,
-								"classroomName": null,
-								"teacAssistantCode": "606",
-								"teacAssistantName": "罗正",
-								"directBroadcastCode": null,
-								"directBroadcastName": null,
-								"stuCode": "0eb1d97827b24f5eb56e35239173c986",
-								"stuName": "王五",
-								"uid": "2441077031",
-								"questionId": null,
-								"questionType": "7",
-								"trueAnswer": null,
-								"answer": null,
-								"answerResult": null,
-								"isCorrect": "N",
-								"score": null,
-								"speed": null,
-								"voiceFileUrl": "group1/M00/01/FA/wKgKfV34ecOAIQnfAAAMMHuqQHE973.mp3",
-								"answerDatetime": "2019-12-17 14:29:41",
-								"hardwareVersion": null,
-								"createUserCode": null,
-								"createUserName": null,
-								"updateUserCode": null,
-								"updateUserName": null,
-								"createTime": null,
-								"updateTime": null,
-								"remark": null,
-								"delFlag": null
-							},
-							{
-								"offset": null,
-								"limit": null,
-								"sort": null,
-								"order": null,
-								"id": "eb9f53c6bc984240b395c334323977b8",
-								"organization": "248e9a6d0fc54077a7a4b6cac152a59e",
-								"organizationName": null,
-								"topicCode": "1a08bb013ef649a7bfd7ab3393cfb678",
-								"topicName": "12",
-								"schoolCode": "e2679f08a70c40a0a4b82ba0b9df0972",
-								"schoolName": "罗正测试校区",
-								"classCode": "0988357619804b7f8ab0958cd42103cf",
-								"className": "开发测试二班",
-								"classroomCode": null,
-								"classroomName": null,
-								"teacAssistantCode": "606",
-								"teacAssistantName": "罗正",
-								"directBroadcastCode": null,
-								"directBroadcastName": null,
-								"stuCode": "0eb1d97827b24f5eb56e35239173c986",
-								"stuName": "王五",
-								"uid": "2441077031",
-								"questionId": null,
-								"questionType": "7",
-								"trueAnswer": null,
-								"answer": null,
-								"answerResult": null,
-								"isCorrect": "N",
-								"score": null,
-								"speed": null,
-								"voiceFileUrl": "group1/M00/01/FA/wKgKfV34ecOADsm3AAAMMN4yzPQ722.mp3",
-								"answerDatetime": "2019-12-17 14:29:41",
-								"hardwareVersion": null,
-								"createUserCode": null,
-								"createUserName": null,
-								"updateUserCode": null,
-								"updateUserName": null,
-								"createTime": null,
-								"updateTime": null,
-								"remark": null,
-								"delFlag": null
-							},
-							{
-								"offset": null,
-								"limit": null,
-								"sort": null,
-								"order": null,
-								"id": "02db983deea4437fb9daca2cc46e1201",
-								"organization": "248e9a6d0fc54077a7a4b6cac152a59e",
-								"organizationName": null,
-								"topicCode": "1a08bb013ef649a7bfd7ab3393cfb678",
-								"topicName": "12",
-								"schoolCode": "e2679f08a70c40a0a4b82ba0b9df0972",
-								"schoolName": "罗正测试校区",
-								"classCode": "0988357619804b7f8ab0958cd42103cf",
-								"className": "开发测试二班",
-								"classroomCode": null,
-								"classroomName": null,
-								"teacAssistantCode": "606",
-								"teacAssistantName": "罗正",
-								"directBroadcastCode": null,
-								"directBroadcastName": null,
-								"stuCode": "0eb1d97827b24f5eb56e35239173c986",
-								"stuName": "王五",
-								"uid": "2441077031",
-								"questionId": null,
-								"questionType": "7",
-								"trueAnswer": null,
-								"answer": null,
-								"answerResult": null,
-								"isCorrect": "N",
-								"score": null,
-								"speed": null,
-								"voiceFileUrl": "group1/M00/01/FA/wKgKfV34ecOATsNwAAALYB0JyCw598.mp3",
-								"answerDatetime": "2019-12-17 14:25:02",
-								"hardwareVersion": null,
-								"createUserCode": null,
-								"createUserName": null,
-								"updateUserCode": null,
-								"updateUserName": null,
-								"createTime": null,
-								"updateTime": null,
-								"remark": null,
-								"delFlag": null
-							},
-							{
-								"offset": null,
-								"limit": null,
-								"sort": null,
-								"order": null,
-								"id": "2a63a7e8b0c04e8aa58a64851517b84e",
-								"organization": "248e9a6d0fc54077a7a4b6cac152a59e",
-								"organizationName": null,
-								"topicCode": "1a08bb013ef649a7bfd7ab3393cfb678",
-								"topicName": "12",
-								"schoolCode": "e2679f08a70c40a0a4b82ba0b9df0972",
-								"schoolName": "罗正测试校区",
-								"classCode": "0988357619804b7f8ab0958cd42103cf",
-								"className": "开发测试二班",
-								"classroomCode": null,
-								"classroomName": null,
-								"teacAssistantCode": "606",
-								"teacAssistantName": "罗正",
-								"directBroadcastCode": null,
-								"directBroadcastName": null,
-								"stuCode": "0eb1d97827b24f5eb56e35239173c986",
-								"stuName": "王五",
-								"uid": "2441077031",
-								"questionId": null,
-								"questionType": "7",
-								"trueAnswer": null,
-								"answer": null,
-								"answerResult": null,
-								"isCorrect": "N",
-								"score": null,
-								"speed": null,
-								"voiceFileUrl": "group1/M00/01/EB/wKgKfV34dHGAKwTaAAAOoDVtqzg107.mp3",
-								"answerDatetime": "2019-12-17 14:23:44",
-								"hardwareVersion": null,
-								"createUserCode": null,
-								"createUserName": null,
-								"updateUserCode": null,
-								"updateUserName": null,
-								"createTime": null,
-								"updateTime": null,
-								"remark": null,
-								"delFlag": null
-							}
-						]
+						this.voiceRecord = da.data
 					}
 				})
 			},
-			playVideo(url) {
+			playVideo(url, type) {
 				this.innerAudioContext.autoplay = true;
-				this.innerAudioContext.src = fileUrl + url;
+				this.innerAudioContext.src = type == 1 ? url : (fileUrl + url);
 				this.innerAudioContext.play();
+				console.log('播放')
 
 			}
 		},

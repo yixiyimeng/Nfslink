@@ -12,7 +12,7 @@
 			<div class="rili bg-white">
 				<div class="title flex justify-between align-center">
 					<span class="arrow" @tap="prevweek"><text class="cuIcon-back"></text></span>
-					<span>{{nowYear}}年{{nowMonth}}月第{{nowWeek}}周</span>
+					<span>{{selectTime|filterDay}}</span>
 					<span class="arrow" @tap="nextweek"><text class="cuIcon-right"></text></span>
 				</div>
 				<div class="rili-hd flex">
@@ -417,6 +417,17 @@
 				let s = value || (type == 0 ? '请选择开始时间' : '请选择结束时间');
 				if (value && value.length > 0) {
 					s = value.replace(/-/g, '.')
+				}
+				return s
+			},
+			filterDay(value) {
+				let s = value || '';
+				if (value && value.length > 0) {
+					s = value.split('-')
+					if (s.length == 3) {
+						return s[0] + '年' + s[1] + '月' + s[2] + '日'
+					}
+					return s
 				}
 				return s
 			}

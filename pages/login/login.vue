@@ -34,8 +34,8 @@
 		},
 		onLoad() {
 			let loginParam = uni.getStorageSync('loginParam')
-			this.username=loginParam.username;
-			this.password=loginParam.password
+			this.username = loginParam.username;
+			this.password = loginParam.password
 		},
 		methods: {
 			focustxt(type) {
@@ -50,6 +50,7 @@
 						username: this.username.trim(),
 						password: this.password.trim()
 					}
+					uni.clearStorageSync();
 					postajax(api.login, param).then((da) => {
 						console.log(da)
 						if (da.code == 0) {

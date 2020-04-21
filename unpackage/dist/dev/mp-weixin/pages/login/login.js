@@ -164,6 +164,7 @@ var _default = { data: function data() {return { focus: 0, username: '', passwor
           username: this.username.trim(),
           password: this.password.trim() };
 
+        uni.clearStorageSync();
         (0, _api.postajax)(_api.api.login, param).then(function (da) {
           console.log(da);
           if (da.code == 0) {

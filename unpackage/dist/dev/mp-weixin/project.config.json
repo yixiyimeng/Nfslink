@@ -4,12 +4,14 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": false,
-		"postcss": true
+		"urlCheck": true,
+		"postcss": true,
+		"es6": true,
+		"minified": true
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.7.0",
-	"appid": "wxcf446a6868a19b8b",
+	"appid": "wxc6921833a3bb5f17",
 	"projectname": "Nfslink",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},

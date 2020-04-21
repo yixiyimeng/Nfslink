@@ -73,32 +73,35 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var f0 = _vm._f("filterDay")(_vm.selectTime)
+
   var l0 = _vm.__map(_vm.topiclist, function(item, index) {
-    var f0 = _vm._f("filterTime")(item.startDatetime)
+    var f1 = _vm._f("filterTime")(item.startDatetime)
 
-    var f1 = _vm._f("filterTime")(item.endDatetime)
+    var f2 = _vm._f("filterTime")(item.endDatetime)
 
-    var f2 = _vm._f("filternum")(item.correctPercent)
+    var f3 = _vm._f("filternum")(item.correctPercent)
 
     return {
       $orig: _vm.__get_orig(item),
-      f0: f0,
       f1: f1,
-      f2: f2
+      f2: f2,
+      f3: f3
     }
   })
 
-  var f3 = _vm._f("filterTimeFormat")(_vm.startdate, 0)
+  var f4 = _vm._f("filterTimeFormat")(_vm.startdate, 0)
 
-  var f4 = _vm._f("filterTimeFormat")(_vm.enddate, 1)
+  var f5 = _vm._f("filterTimeFormat")(_vm.enddate, 1)
 
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
+        f0: f0,
         l0: l0,
-        f3: f3,
-        f4: f4
+        f4: f4,
+        f5: f5
       }
     }
   )
@@ -553,6 +556,17 @@ var _self;var canvaLineA = null;var _default = { data: function data() {return {
       var s = value || (type == 0 ? '请选择开始时间' : '请选择结束时间');
       if (value && value.length > 0) {
         s = value.replace(/-/g, '.');
+      }
+      return s;
+    },
+    filterDay: function filterDay(value) {
+      var s = value || '';
+      if (value && value.length > 0) {
+        s = value.split('-');
+        if (s.length == 3) {
+          return s[0] + '年' + s[1] + '月' + s[2] + '日';
+        }
+        return s;
       }
       return s;
     } } };exports.default = _default;
