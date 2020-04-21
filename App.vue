@@ -253,4 +253,12 @@
 			transform: translateY(0px);
 		}
 	}
+	.noData{
+		padding: 40upx 0;
+	
+	}.noData image{
+		width: 70%;
+		margin: 0 auto;
+		display: block;
+	}
 </style>

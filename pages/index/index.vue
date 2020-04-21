@@ -59,6 +59,9 @@
 							<view>正确率</view>
 						</view>
 					</view>
+					<view class="noData" v-if="topiclist.length<=0">
+						<image src="/static/noData.png" mode="widthFix"></image>
+					</view>
 				</view>
 				<!-- <view class="more" >查看更多>></view> -->
 			</view>
@@ -71,13 +74,13 @@
 					<view class="action selectTime">
 						<picker mode="date" :value="startdate" start="2015-09-01" end="2020-09-01" @change="startDateChange">
 							<view class="picker">
-								{{startdate?startdate:'请选择开始日期'}}
+								{{startdate|filterTimeFormat(0)}}
 							</view>
 						</picker>
 						<text>-</text>
 						<picker mode="date" :value="enddate" start="2015-09-01" end="2020-09-01" @change="endDateChange">
 							<view class="picker">
-								{{enddate?enddate:'请选择结束日期'}}
+								{{enddate|filterTimeFormat(1)}}
 							</view>
 						</picker>
 						<image src="/static/icon5.png" mode="widthFix"></image>
@@ -122,14 +125,7 @@
 				vNowDate: dayjs(),
 				selectTime: '',
 				today: dayjs(),
-				topiclist: [{
-					"topicCode": "463f8e6d3c814958ba3a720c72066550",
-					"topicName": "分地方撒",
-					"classCode": "38af121b79b547b2b780a01d978869f2",
-					"teacherCode": "579",
-					"teacherName": "閤",
-					"correctPercent": "50.00%"
-				}],
+				topiclist: [],
 				userinfo: {}
 			}
 		},
@@ -156,14 +152,21 @@
 				uni.stopPullDownRefresh();
 			}, 1000);
 		},
+		watch: {
+			selectTime(newval, oldval) {
+				if (newval != oldval) {
+					if (this.userinfo && this.userinfo.stuCode) {
+						this.gettopiclist();
+						this.advanceProgress();
+					}
+				}
+			}
+		},
 		methods: {
 			init() {
-				this.getUserinfo();
 				this.getdaylist(this.vNowDate);
-				this.gettopiclist();
-				this.advanceProgress();
 				this.selectTime = dayjs().format('YYYY-MM-DD')
-				this.getDatePullList();
+				this.getUserinfo();
 			},
 			prevweek() {
 				var vNowDate = this.vNowDate.subtract(7, "day")
@@ -177,7 +180,6 @@
 			},
 			getdaylist(dayjs) {
 				var vNowDate = dayjs;
-				this.enddate = vNowDate.format('YYYY-MM-DD')
 				if (vNowDate.day() == 0) {
 					vNowDate = vNowDate.subtract(7, "day")
 				}
@@ -189,43 +191,39 @@
 						day: vNowDate.day(i).format('D'),
 						isCheck: false
 					}
-
-					if (vNowDate.day(i).isAfter(this.today)) {
-						item.isdisable = true;
-					} else {
-						item.isdisable = false;
-						if (vNowDate.day(i).isSame(vNowDate)) {
-							item.isCheck = true;
-						}
+					item.isdisable = true;
+					if (vNowDate.day(i).isSame(vNowDate)) {
+						this.selectTime = vNowDate.format('YYYY-MM-DD')
+						item.isCheck = true;
 					}
-
 					this.daylist.push(item)
 				}
 				this.startdate = this.daylist[0].allday;
+				/* 结束时间，比较最后一天和今天 */
+				if (vNowDate.day(7).isBefore(this.today)) {
+					this.enddate = this.daylist[6].allday;
+				} else {
+					this.enddate = this.today.format('YYYY-MM-DD')
+				}
+
 				this.nowYear = this.vNowDate.year();
 				this.nowMonth = this.vNowDate.month() + 1;
 				this.nowWeek = Math.ceil((this.vNowDate.date() + 6 - (this.vNowDate.day() == 0 ? 7 : this.vNowDate.day())) / 7);
 			},
-			getDatePullList(){
+			getDatePullList() {
 				postajax(api.getDatePullList, {
-					"stuCode": "25dacf6dc11c482587ad84c84ceb9ad7",
-					"queryStartTime": "2020-01-02 00:00:0",
-					"queryEndTime": "2020-04-20 23:59:59"
+					"stuCode": this.userinfo.stuCode,
+					"queryStartTime": this.startdate + ' 00:00:00',
+					"queryEndTime": this.daylist[this.daylist.length - 1].allday + ' 23:59:59'
 				}).then(da => {
 					{
-						console.log('时间有返回吗')
-						console.log(da)
 						if (da.code == 0 && da.data && da.data.length > 0) {
-							console.log('shijian')
-							this.daylist.forEach(item=>{
-								var index=da.data.findIndex(subitem=>subitem.title==item)
-								if(index>-1){
-									item.isdisable=false;
-								}else{
-									item.isdisable=true;
+							this.daylist.forEach(item => {
+								var index = da.data.findIndex(subitem => subitem.title == item.allday)
+								if (index > -1) {
+									item.isdisable = false;
 								}
 							})
-							console.log(this.daylist)
 						}
 					}
 				})
@@ -233,12 +231,11 @@
 			gettopiclist() {
 				/* 查询主题列表 */
 				postajax(api.gettopiclist, {
-					"stuCode": "25dacf6dc11c482587ad84c84ceb9ad7",
-					"queryDate": "2020-04-02"
+					"stuCode": this.userinfo.stuCode,
+					"queryDate": this.selectTime
 				}).then(da => {
 					{
-						console.log(da)
-						if (da.code == 0 && da.data && da.data.length > 0) {
+						if (da.code == 0 && da.data) {
 							this.topiclist = da.data;
 						}
 					}
@@ -247,10 +244,10 @@
 			advanceProgress() {
 				/* 进步趋势 */
 				postajax(api.advanceProgress, {
-					"queryStartDate": "2020-04-01 00:00:00",
-					"queryEndDate": "2020-04-02 23:59:59",
-					"classCode": "38af121b79b547b2b780a01d978869f2",
-					"stuCode": "25dacf6dc11c482587ad84c84ceb9ad7"
+					"queryStartDate": this.startdate + ' 00:00:00',
+					"queryEndDate": this.enddate + ' 23:59:59',
+					"classCode": this.userinfo.classCode,
+					"stuCode": this.userinfo.stuCode
 				}).then(da => {
 					{
 						console.log(da)
@@ -298,7 +295,10 @@
 						console.log(da)
 						if (da.code == 0 && da.data && da.data.length > 0) {
 							this.userinfo = da.data[0];
-							uni.setStorageSync('userinfo', da.data[0])
+							uni.setStorageSync('userinfo', da.data[0]);
+							this.gettopiclist();
+							this.advanceProgress();
+							this.getDatePullList();
 						}
 					}
 				})
@@ -374,10 +374,18 @@
 				});
 			},
 			startDateChange(e) {
-				this.startdate = e.detail.value.replace(/-/g, '.')
+				this.startdate = e.detail.value;
+				/* 更新进步趋势 */
+				if (this.startdate && this.enddate) {
+					this.advanceProgress()
+				}
 			},
 			endDateChange(e) {
-				this.enddate = e.detail.value.replace(/-/g, '.')
+				this.enddate = e.detail.value;
+				/* 更新进步趋势 */
+				if (this.startdate && this.enddate) {
+					this.advanceProgress()
+				}
 			},
 			showDetails(obj) {
 				console.log(obj)
@@ -388,20 +396,27 @@
 		},
 		filters: {
 			filternum(value) {
-				let s = value;
+				let s = value || 0;
 				console.log(value)
 				if (value && value.length > 0) {
-				
+
 					s = value.slice(0, value.length - 1)
 				}
 				return s
 			},
 			filterTime(value) {
-				let s = value;
+				let s = value || '';
 				console.log(value)
 				if (value && value.length > 0) {
 
 					s = value.slice(10, value.length)
+				}
+				return s
+			},
+			filterTimeFormat(value, type) {
+				let s = value || (type == 0 ? '请选择开始时间' : '请选择结束时间');
+				if (value && value.length > 0) {
+					s = value.replace(/-/g, '.')
 				}
 				return s
 			}

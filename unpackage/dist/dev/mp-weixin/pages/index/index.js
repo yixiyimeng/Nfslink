@@ -88,11 +88,17 @@ var render = function() {
     }
   })
 
+  var f3 = _vm._f("filterTimeFormat")(_vm.startdate, 0)
+
+  var f4 = _vm._f("filterTimeFormat")(_vm.enddate, 1)
+
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
-        l0: l0
+        l0: l0,
+        f3: f3,
+        f4: f4
       }
     }
   )
@@ -129,6 +135,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
 
 
 
@@ -332,30 +341,25 @@ var _uCharts = _interopRequireDefault(__webpack_require__(/*! @/components/u-cha
 //
 //
 //
-var _self;var canvaLineA = null;var _default = { data: function data() {return { cWidth: '', cHeight: '', pixelRatio: 1, textarea: '', startdate: null, enddate: null, daylist: [], nowYear: '', nowMonth: '', nowWeek: '', vNowDate: (0, _dayjsMin.default)(), selectTime: '', today: (0, _dayjsMin.default)(), topiclist: [{ "topicCode": "463f8e6d3c814958ba3a720c72066550", "topicName": "分地方撒", "classCode": "38af121b79b547b2b780a01d978869f2", "teacherCode": "579", "teacherName": "閤", "correctPercent": "50.00%" }], userinfo: {} };}, onLoad: function onLoad() {_self = this;this.cWidth = uni.upx2px(700);this.cHeight = uni.upx2px(500);this.init();}, onPullDownRefresh: function onPullDownRefresh() {this.init();setTimeout(function () {uni.stopPullDownRefresh();}, 1000);}, methods: { init: function init() {this.getUserinfo();this.getdaylist(this.vNowDate);this.gettopiclist();this.advanceProgress();this.selectTime = (0, _dayjsMin.default)().format('YYYY-MM-DD');this.getDatePullList();}, prevweek: function prevweek() {var vNowDate = this.vNowDate.subtract(7, "day");this.getdaylist(vNowDate);this.getDatePullList();}, nextweek: function nextweek() {var vNowDate = this.vNowDate.add(7, "day");this.getdaylist(vNowDate);this.getDatePullList();}, getdaylist: function getdaylist(dayjs) {var vNowDate = dayjs;this.enddate = vNowDate.format('YYYY-MM-DD');if (vNowDate.day() == 0) {vNowDate = vNowDate.subtract(7, "day");}this.vNowDate = vNowDate;this.daylist = [];for (var i = 1; i <= 7; i++) {var item = { allday: vNowDate.day(i).format('YYYY-MM-DD'), day: vNowDate.day(i).format('D'), isCheck: false };if (vNowDate.day(i).isAfter(this.today)) {item.isdisable = true;} else {item.isdisable = false;if (vNowDate.day(i).isSame(vNowDate)) {item.isCheck = true;}}this.daylist.push(item);}this.startdate = this.daylist[0].allday;this.nowYear = this.vNowDate.year();
-      this.nowMonth = this.vNowDate.month() + 1;
-      this.nowWeek = Math.ceil((this.vNowDate.date() + 6 - (this.vNowDate.day() == 0 ? 7 : this.vNowDate.day())) / 7);
+//
+//
+//
+var _self;var canvaLineA = null;var _default = { data: function data() {return { cWidth: '', cHeight: '', pixelRatio: 1, textarea: '', startdate: null, enddate: null, daylist: [], nowYear: '', nowMonth: '', nowWeek: '', vNowDate: (0, _dayjsMin.default)(), selectTime: '', today: (0, _dayjsMin.default)(), topiclist: [], userinfo: {} };}, onLoad: function onLoad() {_self = this;this.cWidth = uni.upx2px(700);this.cHeight = uni.upx2px(500);this.init();}, onPullDownRefresh: function onPullDownRefresh() {this.init();setTimeout(function () {uni.stopPullDownRefresh();}, 1000);}, watch: { selectTime: function selectTime(newval, oldval) {if (newval != oldval) {if (this.userinfo && this.userinfo.stuCode) {this.gettopiclist();this.advanceProgress();}}} }, methods: { init: function init() {this.getdaylist(this.vNowDate);this.selectTime = (0, _dayjsMin.default)().format('YYYY-MM-DD');this.getUserinfo();}, prevweek: function prevweek() {var vNowDate = this.vNowDate.subtract(7, "day");this.getdaylist(vNowDate);this.getDatePullList();}, nextweek: function nextweek() {var vNowDate = this.vNowDate.add(7, "day");this.getdaylist(vNowDate);this.getDatePullList();}, getdaylist: function getdaylist(dayjs) {var vNowDate = dayjs;if (vNowDate.day() == 0) {vNowDate = vNowDate.subtract(7, "day");}this.vNowDate = vNowDate;this.daylist = [];for (var i = 1; i <= 7; i++) {var item = { allday: vNowDate.day(i).format('YYYY-MM-DD'), day: vNowDate.day(i).format('D'), isCheck: false };item.isdisable = true;if (vNowDate.day(i).isSame(vNowDate)) {this.selectTime = vNowDate.format('YYYY-MM-DD');item.isCheck = true;}this.daylist.push(item);}this.startdate = this.daylist[0].allday; /* 结束时间，比较最后一天和今天 */if (vNowDate.day(7).isBefore(this.today)) {this.enddate = this.daylist[6].allday;} else {this.enddate = this.today.format('YYYY-MM-DD');}this.nowYear = this.vNowDate.year();this.nowMonth = this.vNowDate.month() + 1;this.nowWeek = Math.ceil((this.vNowDate.date() + 6 - (this.vNowDate.day() == 0 ? 7 : this.vNowDate.day())) / 7);
     },
     getDatePullList: function getDatePullList() {var _this = this;
       (0, _api.postajax)(_api.api.getDatePullList, {
-        "stuCode": "25dacf6dc11c482587ad84c84ceb9ad7",
-        "queryStartTime": "2020-01-02 00:00:0",
-        "queryEndTime": "2020-04-20 23:59:59" }).
+        "stuCode": this.userinfo.stuCode,
+        "queryStartTime": this.startdate + ' 00:00:00',
+        "queryEndTime": this.daylist[this.daylist.length - 1].allday + ' 23:59:59' }).
       then(function (da) {
         {
-          console.log('时间有返回吗');
-          console.log(da);
           if (da.code == 0 && da.data && da.data.length > 0) {
-            console.log('shijian');
             _this.daylist.forEach(function (item) {
-              var index = da.data.findIndex(function (subitem) {return subitem.title == item;});
+              var index = da.data.findIndex(function (subitem) {return subitem.title == item.allday;});
               if (index > -1) {
                 item.isdisable = false;
-              } else {
-                item.isdisable = true;
               }
             });
-            console.log(_this.daylist);
           }
         }
       });
@@ -363,12 +367,11 @@ var _self;var canvaLineA = null;var _default = { data: function data() {return {
     gettopiclist: function gettopiclist() {var _this2 = this;
       /* 查询主题列表 */
       (0, _api.postajax)(_api.api.gettopiclist, {
-        "stuCode": "25dacf6dc11c482587ad84c84ceb9ad7",
-        "queryDate": "2020-04-02" }).
+        "stuCode": this.userinfo.stuCode,
+        "queryDate": this.selectTime }).
       then(function (da) {
         {
-          console.log(da);
-          if (da.code == 0 && da.data && da.data.length > 0) {
+          if (da.code == 0 && da.data) {
             _this2.topiclist = da.data;
           }
         }
@@ -377,10 +380,10 @@ var _self;var canvaLineA = null;var _default = { data: function data() {return {
     advanceProgress: function advanceProgress() {var _this3 = this;
       /* 进步趋势 */
       (0, _api.postajax)(_api.api.advanceProgress, {
-        "queryStartDate": "2020-04-01 00:00:00",
-        "queryEndDate": "2020-04-02 23:59:59",
-        "classCode": "38af121b79b547b2b780a01d978869f2",
-        "stuCode": "25dacf6dc11c482587ad84c84ceb9ad7" }).
+        "queryStartDate": this.startdate + ' 00:00:00',
+        "queryEndDate": this.enddate + ' 23:59:59',
+        "classCode": this.userinfo.classCode,
+        "stuCode": this.userinfo.stuCode }).
       then(function (da) {
         {
           console.log(da);
@@ -429,6 +432,9 @@ var _self;var canvaLineA = null;var _default = { data: function data() {return {
           if (da.code == 0 && da.data && da.data.length > 0) {
             _this5.userinfo = da.data[0];
             uni.setStorageSync('userinfo', da.data[0]);
+            _this5.gettopiclist();
+            _this5.advanceProgress();
+            _this5.getDatePullList();
           }
         }
       });
@@ -504,10 +510,18 @@ var _self;var canvaLineA = null;var _default = { data: function data() {return {
 
     },
     startDateChange: function startDateChange(e) {
-      this.startdate = e.detail.value.replace(/-/g, '.');
+      this.startdate = e.detail.value;
+      /* 更新进步趋势 */
+      if (this.startdate && this.enddate) {
+        this.advanceProgress();
+      }
     },
     endDateChange: function endDateChange(e) {
-      this.enddate = e.detail.value.replace(/-/g, '.');
+      this.enddate = e.detail.value;
+      /* 更新进步趋势 */
+      if (this.startdate && this.enddate) {
+        this.advanceProgress();
+      }
     },
     showDetails: function showDetails(obj) {
       console.log(obj);
@@ -518,7 +532,7 @@ var _self;var canvaLineA = null;var _default = { data: function data() {return {
 
   filters: {
     filternum: function filternum(value) {
-      var s = value;
+      var s = value || 0;
       console.log(value);
       if (value && value.length > 0) {
 
@@ -527,11 +541,18 @@ var _self;var canvaLineA = null;var _default = { data: function data() {return {
       return s;
     },
     filterTime: function filterTime(value) {
-      var s = value;
+      var s = value || '';
       console.log(value);
       if (value && value.length > 0) {
 
         s = value.slice(10, value.length);
+      }
+      return s;
+    },
+    filterTimeFormat: function filterTimeFormat(value, type) {
+      var s = value || (type == 0 ? '请选择开始时间' : '请选择结束时间');
+      if (value && value.length > 0) {
+        s = value.replace(/-/g, '.');
       }
       return s;
     } } };exports.default = _default;

@@ -14,15 +14,15 @@
 			<div class="flex justify-between userinfobox align-center">
 				<div class="flex-sub">
 					<div>班级正确率名次</div>
-					<div class="num red">{{detail.classRank}}</div>
+					<div class="num red">{{detail.classRank||'--'}}</div>
 				</div>
 				<div class="userinfo">
 					<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
-					<view>{{detail.studentAnalyseDetail.stuName}}</view>
+					<view>{{detail.studentAnalyseDetail.stuName||'--'}}</view>
 				</div>
 				<div class="flex-sub">
 					<div>累计积分</div>
-					<div class="num">{{detail.totalScore}}</div>
+					<div class="num">{{detail.totalScore||'--'}}</div>
 				</div>
 			</div>
 		</div>
@@ -42,34 +42,34 @@
 			<div class="barbox flex justify-center align-center">
 				<div class="flex justify-center">
 					<view class="progress ">
-						<view class="bg-black" :style="[{ height:detail.averageCorrectAccuracy}]">
-							<text>{{detail.averageCorrectAccuracy}}</text>
+						<view class="bg-black" :style="[{ height:detail.averageCorrectAccuracy||0}]">
+							<text>{{detail.averageCorrectAccuracy||0}}</text>
 						</view>
 					</view>
 					<view class="progress">
-						<view class="bg-red" :style="[{ height:detail.bestCorrectAccuracy}]">
-							<text>{{detail.bestCorrectAccuracy}}</text>
+						<view class="bg-red" :style="[{ height:detail.bestCorrectAccuracy||0}]">
+							<text>{{detail.bestCorrectAccuracy||0}}</text>
 						</view>
 					</view>
 					<view class="progress">
-						<view class="bg-blue" :style="[{ height:detail.stuCorrectAccuracy}]">
-							<text>{{detail.stuCorrectAccuracy}}</text>
+						<view class="bg-blue" :style="[{ height:detail.stuCorrectAccuracy||0}]">
+							<text>{{detail.stuCorrectAccuracy||0}}</text>
 						</view>
 					</view>
 				</div>
 				<div>
 					<view class="flex align-center">
-						<text>{{detail.averageCorrectAccuracy}}</text>
+						<text>{{detail.averageCorrectAccuracy||0}}</text>
 						<view class="tag bg-black"></view>
 						<view>班级平均正确率</view>
 					</view>
 					<view class="flex align-center">
-						<text>{{detail.bestCorrectAccuracy}}</text>
+						<text>{{detail.bestCorrectAccuracy||0}}</text>
 						<view class="tag bg-red"></view>
 						<view>班级最高综合正确率</view>
 					</view>
 					<view class="flex align-center">
-						<text>{{detail.stuCorrectAccuracy}}</text>
+						<text>{{detail.stuCorrectAccuracy||0}}</text>
 						<view class="tag bg-blue"></view>
 						<view>我的正确率</view>
 					</view>
@@ -83,8 +83,8 @@
 						答题详情
 					</view>
 					<view class="action ft20 ">
-						<text>答题数量共 <text class="text-red margin-left-xs margin-right-xs">{{detail.sendQuestionCount}}</text> 题</text>
-						<text class="margin-left">答对数量 <text class="text-red margin-left-xs margin-right-xs">{{detail.answerTrueQuestionCount}}</text>
+						<text>答题数量共 <text class="text-red margin-left-xs margin-right-xs">{{detail.sendQuestionCount||0}}</text> 题</text>
+						<text class="margin-left">答对数量 <text class="text-red margin-left-xs margin-right-xs">{{detail.answerTrueQuestionCount||0}}</text>
 							题</text>
 					</view>
 				</view>
@@ -103,6 +103,9 @@
 							<view class="flex-sub">{{item.trueAnswer}}</view>
 						</view>
 					</view>
+					<view class="noData" v-if="!detail.studentAnalyseDetail||detail.studentAnalyseDetail.questionList.length<=0">
+						<image src="/static/noData.png" mode="widthFix"></image>
+					</view>
 				</view>
 			</view>
 		</div>
@@ -113,7 +116,7 @@
 						语音题
 					</view>
 					<view class="action ft20 ">
-						<text>答题数量共 <text class="text-red margin-left-xs margin-right-xs">{{voiceRecord.length}}</text> 题</text>
+						<text>答题数量共 <text class="text-red margin-left-xs margin-right-xs">{{voiceRecord.length||0}}</text> 题</text>
 					</view>
 				</view>
 				<view class="table">
@@ -134,6 +137,9 @@
 								<image src="../../static/icon6.png" mode="widthFix" class="notice"></image>
 							</view>
 						</view>
+					</view>
+					<view class="noData" v-if="voiceRecord.length<=0">
+						<image src="/static/noData.png" mode="widthFix"></image>
 					</view>
 				</view>
 			</view>
@@ -235,12 +241,12 @@
 				//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
 				Arcbar2.series = [{
 					name: '正确率',
-					"data": this.detail.stuCorrectAccuracy.slice(0, this.detail.stuCorrectAccuracy.length - 1) / 100,
+					"data": this.detail.stuCorrectAccuracy?this.detail.stuCorrectAccuracy.slice(0, this.detail.stuCorrectAccuracy.length - 1) / 100:0,
 					"color": "#81a3e2"
 				}];
 				Arcbar3.series = [{
 					name: '击败人数比',
-					"data": this.detail.defeatStuCount.slice(0, this.detail.defeatStuCount.length - 1) / 100,
+					"data":this.detail.defeatStuCount? this.detail.defeatStuCount.slice(0, this.detail.defeatStuCount.length - 1) / 100:0,
 					"color": "#99c2cc"
 				}];
 				_self.showArcbar2("canvasArcbar2", Arcbar2);
