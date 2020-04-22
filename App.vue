@@ -257,8 +257,11 @@
 		padding: 40upx 0;
 	
 	}.noData image{
-		width: 70%;
+		width: 330upx;
 		margin: 0 auto;
 		display: block;
+	}
+	.cu-bar .action:first-child{
+		font-size: 34upx;
 	}
 </style>

@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/splash/splash",
     "pages/login/login",
     "pages/index/index",
     "pages/classdetails/classdetails",
-    "pages/splash/splash",
     "pages/forgetpwd/forgetpwd",
     "pages/homework/homework"
   ],
@@ -34,5 +34,5 @@
     ]
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap59.json"
+  "sitemapLocation": "sitemap76.json"
 }

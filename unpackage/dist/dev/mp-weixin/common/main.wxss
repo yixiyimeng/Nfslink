@@ -4932,8 +4932,11 @@ page {
 	padding: 40rpx 0;
 }
 .noData image{
-	width: 70%;
+	width: 330rpx;
 	margin: 0 auto;
 	display: block;
+}
+.cu-bar .action:first-child{
+	font-size: 34rpx;
 }
 

@@ -5,7 +5,7 @@
 				<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
 				<view>
 					<view class="name">{{userinfo.stuName}}</view>
-					<view>{{userinfo.className}}</view>
+					<!-- <view>{{userinfo.className}}</view> -->
 					<view class="cu-tag bg-white round">{{userinfo.className}}</view>
 				</view>
 			</div>
@@ -29,21 +29,22 @@
 				</div>
 			</div>
 		</div>
+		<!-- <lxCalendar @change="change"></lxCalendar> -->
 		<div class="flex-sub main">
 			<view class="bg-white">
 				<view class="cu-bar ">
 					<view class="action">
 						<text class="cuIcon-titles "></text>
-						<text>课程详情</text>
+						<text class="text-bold">课程详情</text>
 					</view>
 				</view>
 				<view class="topiclist ">
-					<view class="topic-item flex align-center" @tap="showDetails(item)" v-for="(item,index) in topiclist" :key="index">
+					<view class="topic-item flex align-center" @tap="showDetails(item)" v-for="(item,index) in shorttopiclist" :key="index">
 						<view class="name">{{item.subjectName}}</view>
 						<view class="flex-sub">
 							<view>
 								<text class="cuIcon-title"></text>
-								<text>{{item.startDatetime|filterTime}}-{{item.endDatetime|filterTime}} / {{item.teacherName}}老师</text>
+								<text class="text-bold">{{item.startDatetime|filterTime}}-{{item.endDatetime|filterTime}} / {{item.teacherName}}老师</text>
 							</view>
 							<view>
 								<text class="cuIcon-title"></text>
@@ -63,22 +64,22 @@
 						<image src="/static/noData.png" mode="widthFix"></image>
 					</view>
 				</view>
-				<!-- <view class="more" >查看更多>></view> -->
+				<view class="more" v-if="topiclist.length>2" @tap="isOpen=!isOpen">{{isOpen?'收起':'查看更多>>'}}</view>
 			</view>
 			<view class="bg-white mt15">
 				<view class="cu-bar">
 					<view class="action">
 						<text class="cuIcon-titles "></text>
-						<text>进步趋势</text>
+						<text class="text-bold">进步趋势</text>
 					</view>
 					<view class="action selectTime">
-						<picker mode="date" :value="startdate" start="2015-09-01" end="2020-09-01" @change="startDateChange">
+						<picker mode="date" :value="startdate" :end="todaytxt" @change="startDateChange">
 							<view class="picker">
 								{{startdate|filterTimeFormat(0)}}
 							</view>
 						</picker>
 						<text>-</text>
-						<picker mode="date" :value="enddate" start="2015-09-01" end="2020-09-01" @change="endDateChange">
+						<picker mode="date" :value="enddate" :end="todaytxt" @change="endDateChange">
 							<view class="picker">
 								{{enddate|filterTimeFormat(1)}}
 							</view>
@@ -107,6 +108,7 @@
 		postajax
 	} from '@/utils/api.js'
 	import uCharts from '@/components/u-charts/u-charts.js';
+	import lxCalendar from '@/components/lx-calendar/lx-calendar.vue'
 	var _self;
 	var canvaLineA = null;
 	export default {
@@ -125,9 +127,15 @@
 				vNowDate: dayjs(),
 				selectTime: '',
 				today: dayjs(),
+				todaytxt: dayjs().format('YYYY-MM-DD'),
 				topiclist: [],
-				userinfo: {}
+				userinfo: {},
+				isOpen: false,
+				shorttopiclist: []
 			}
+		},
+		components: {
+			lxCalendar
 		},
 		onLoad() {
 			_self = this;
@@ -160,12 +168,21 @@
 						this.advanceProgress();
 					}
 				}
+			},
+			isOpen(newval, oldval) {
+				if (newval != oldval) {
+					if (newval) {
+						this.shorttopiclist = [...this.topiclist]
+					} else {
+						this.shorttopiclist = this.topiclist.slice(0, this.topiclist.length > 5 ? 5 : this.topiclist.length)
+					}
+				}
 			}
 		},
 		methods: {
 			init() {
 				this.getdaylist(this.vNowDate);
-				this.selectTime = dayjs().format('YYYY-MM-DD')
+				this.selectTime = this.vNowDate.format('YYYY-MM-DD')
 				this.getUserinfo();
 			},
 			prevweek() {
@@ -174,9 +191,18 @@
 				this.getDatePullList()
 			},
 			nextweek() {
-				var vNowDate = this.vNowDate.add(7, "day")
-				this.getdaylist(vNowDate);
-				this.getDatePullList()
+				/* 判断当前日期的最后一天是否大于今天，如果大于，则不能再切换 */
+				var lastdate = dayjs(this.daylist[6].allday)
+				if (lastdate.isBefore(this.today)) {
+					var vNowDate = this.vNowDate.add(7, "day")
+					this.getdaylist(vNowDate);
+					this.getDatePullList()
+				} else {
+					uni.showToast({
+						title: '没有更多数据了！',
+						icon:'none'
+					})
+				}
 			},
 			getdaylist(dayjs) {
 				var vNowDate = dayjs;
@@ -198,7 +224,12 @@
 					}
 					this.daylist.push(item)
 				}
-				this.startdate = this.daylist[0].allday;
+				/* 先比较第一天是否比今天大，如果是，则不替换 */
+				if (vNowDate.day(1).isBefore(this.today)) {
+					this.startdate = this.daylist[0].allday;
+				} else {
+					this.startdate = this.today.format('YYYY-MM-DD')
+				}
 				/* 结束时间，比较最后一天和今天 */
 				if (vNowDate.day(7).isBefore(this.today)) {
 					this.enddate = this.daylist[6].allday;
@@ -237,6 +268,11 @@
 					{
 						if (da.code == 0 && da.data) {
 							this.topiclist = da.data;
+							if (this.isOpen) {
+								this.shorttopiclist = [...this.topiclist]
+							} else {
+								this.shorttopiclist = this.topiclist.slice(0, this.topiclist.length > 5 ? 5 : this.topiclist.length)
+							}
 						}
 					}
 				})
@@ -374,6 +410,14 @@
 				});
 			},
 			startDateChange(e) {
+				/* 判断结束时间需要小于开始时间 */
+				if (dayjs(e.detail.value).isAfter(this.enddate)) {
+					uni.showToast({
+						title: '开始时间不能大于结束时间',
+						icon: 'none'
+					})
+					return true;
+				}
 				this.startdate = e.detail.value;
 				/* 更新进步趋势 */
 				if (this.startdate && this.enddate) {
@@ -381,6 +425,15 @@
 				}
 			},
 			endDateChange(e) {
+
+				/* 判断结束时间需要小于开始时间 */
+				if (dayjs(e.detail.value).isBefore(this.startdate)) {
+					uni.showToast({
+						title: '结束时间不能小于开始时间',
+						icon: 'none'
+					})
+					return true;
+				}
 				this.enddate = e.detail.value;
 				/* 更新进步趋势 */
 				if (this.startdate && this.enddate) {
@@ -392,6 +445,9 @@
 				uni.navigateTo({
 					url: '/pages/classdetails/classdetails?info=' + encodeURIComponent(JSON.stringify(obj))
 				})
+			},
+			change(e) {
+				console.log(e);
 			}
 		},
 		filters: {
@@ -409,7 +465,7 @@
 				console.log(value)
 				if (value && value.length > 0) {
 
-					s = value.slice(10, value.length)
+					s = value.slice(11, value.length)
 				}
 				return s
 			},
@@ -450,39 +506,40 @@
 			background: #81a3e2;
 			padding: 40upx 36upx 18upx;
 			color: #fff;
-			font-size: 24upx;
+			font-size: 36upx;
 
 			.cu-avatar {
 				border: 5upx solid #fff;
 				height: 120upx;
 				width: 120upx;
-				margin-right: 15upx;
+				margin-right: 22upx;
 			}
 
 			.name {
-				font-size: 30upx;
+				font-size: 36upx;
 			}
 
 			.cu-tag {
 				color: #333;
-				font-size: 20upx;
-				height: 30upx;
+				font-size: 30upx;
+				line-height: 40upx;
 				margin-top: 5upx;
 			}
 		}
 
 		.rili {
 			text-align: center;
+			font-size: 24upx;
 
 			.title {
 				color: #333;
-				font-size: 30upx;
-				line-height: 60upx;
+				font-size: 34upx;
+				line-height: 95upx;
 				padding: 0 20upx;
 
 				.arrow {
 					color: #999;
-					font-size: 40upx;
+					font-size: 42upx;
 					padding: 0 10upx;
 				}
 			}
@@ -491,26 +548,33 @@
 				background: #ececf2;
 				line-height: 50upx;
 				color: #333;
-				font-size: 24upx;
+
 			}
 
 			.rili-bd {
 				text {
-					height: 60upx;
-					width: 60upx;
-					line-height: 60upx;
+					height: 70upx;
+					width: 70upx;
+					line-height: 70upx;
 					border-radius: 100%;
 					display: block;
-					color: #333;
+					font-size: 26upx;
 					margin: 24upx auto;
-					background: #d1d1e9;
+					background: #a49db7;
+					color: #fff;
 
 					&.disable {
 						background: #ececf2;
+						color: #333;
 					}
 
 					&.active {
 						background: #81a3e2;
+
+					}
+
+					&.disable.active {
+						opacity: .5;
 						color: #fff;
 					}
 				}
@@ -533,9 +597,8 @@
 				.topic-item {
 					padding: 30upx 0;
 					border-top: 1px solid #f7f7fc;
-					font-size: 22upx;
+					font-size: 28upx;
 					color: #333;
-
 					&:last-child {
 						border-bottom: 1px solid #f7f7fc;
 
@@ -543,7 +606,6 @@
 
 					.name {
 						color: #fff;
-						font-size: 24upx;
 						background: #e281b6;
 						border-radius: 100%;
 						height: 70upx;
@@ -554,6 +616,18 @@
 						overflow: hidden;
 						white-space: nowrap;
 						text-overflow: ellipsis;
+					}
+
+					&:nth-child(3n+2) {
+						.name {
+							background: #81a3e2;
+						}
+					}
+
+					&:nth-child(3n+3) {
+						.name {
+							background: #af81e2;
+						}
 					}
 
 					.text-red {}
@@ -571,7 +645,7 @@
 
 			.more {
 				color: #333;
-				font-size: 18upx;
+				font-size: 24upx;
 				text-align: center;
 				line-height: 60upx;
 			}
@@ -602,9 +676,9 @@
 			.selectTime {
 				border: 1px solid #f2f2f4;
 				border-radius: 10upx;
-				line-height: 44upx;
+				line-height: 50upx;
 				color: #666;
-				font-size: 20upx;
+				font-size: 24upx;
 				padding: 0 10upx 0 20upx;
 
 				image {

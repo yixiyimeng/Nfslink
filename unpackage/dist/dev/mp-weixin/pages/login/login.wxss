@@ -41,7 +41,7 @@
 }
 .view-page .group .row .link.data-v-0fe02e2c {
         color: #4944ff;
-        font-size: 20rpx;
+        font-size: 24rpx;
 }
 .view-page .group .row.active.data-v-0fe02e2c {
         border-color: #4944ff;

@@ -1,5 +1,5 @@
-.ft20.data-v-790caf18 {
-  font-size: 20rpx;
+.ft24.data-v-790caf18 {
+  font-size: 24rpx;
 }
 .view-page.data-v-790caf18 {
   position: relative;
@@ -7,7 +7,7 @@
   background: #f7f7fc;
 }
 .view-page .info.data-v-790caf18 {
-    font-size: 20rpx;
+    font-size: 24rpx;
     color: #333;
     padding: 20rpx 60rpx;
 }
@@ -16,7 +16,7 @@
       background: #e281b6;
       border-radius: 8rpx;
       height: 40rpx;
-      font-size: 18rpx;
+      font-size: 20rpx;
 }
 .view-page .info .cu-tag + .cu-tag.data-v-790caf18 {
         color: #81a3e2;
@@ -25,7 +25,7 @@
 }
 .view-page .info .name.data-v-790caf18 {
       margin: 6rpx 0;
-      font-size: 24rpx;
+      font-size: 30rpx;
 }
 .view-page .modbox.data-v-790caf18 {
     margin: 0 35rpx;
@@ -41,12 +41,11 @@
 .view-page .userinfobox.data-v-790caf18 {
     padding: 20rpx 50rpx;
     text-align: center;
-    font-size: 20rpx;
+    font-size: 28rpx;
     color: #666;
 }
 .view-page .userinfobox .userinfo.data-v-790caf18 {
       margin: 0 50rpx;
-      font-size: 24rpx;
       color: #333;
 }
 .view-page .userinfobox .userinfo .cu-avatar.data-v-790caf18 {
@@ -65,6 +64,7 @@
 .view-page .piebox.data-v-790caf18 {
     padding: 60rpx 0;
     text-align: center;
+    font-size: 28rpx;
 }
 .charts3.data-v-790caf18 {
   width: 250rpx;
@@ -73,7 +73,7 @@
   margin: 0 30rpx;
 }
 .progress.data-v-790caf18 {
-  width: 50rpx;
+  width: 60rpx;
   height: 200rpx;
   background: #f4f4fe;
   display: -webkit-box;
@@ -91,53 +91,49 @@
     position: relative;
 }
 .progress > view > text.data-v-790caf18 {
-      -webkit-transform-origin: 50% 100%;
-          -ms-transform-origin: 50% 100%;
-              transform-origin: 50% 100%;
-      -moz-transform: rotate(-90deg);
-      -webkit-transform: rotate(-90deg);
-      display: block;
+      font-size: 18rpx;
       position: absolute;
-      left: -10rpx;
-      top: 10rpx;
-      filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+      top: -30rpx;
 }
 .barbox.data-v-790caf18 {
   padding: 40rpx 0;
 }
 .barbox .bg-red.data-v-790caf18 {
     background: #e4816a;
+    color: #e4816a;
 }
 .barbox .bg-blue.data-v-790caf18 {
     background: #81a3e2;
+    color: #81a3e2;
 }
 .barbox .bg-black.data-v-790caf18 {
     background: #706775;
+    color: #706775;
 }
 .barbox > ._div + ._div.data-v-790caf18 {
-    margin-left: 50rpx;
+    margin-left: 30rpx;
     color: #706775;
-    font-size: 20rpx;
+    font-size: 28rpx;
 }
 .barbox > ._div + ._div .flex + .flex.data-v-790caf18 {
       margin-top: 16rpx;
 }
 .barbox > ._div + ._div .tag.data-v-790caf18 {
-      height: 20rpx;
-      width: 20rpx;
+      height: 28rpx;
+      width: 28rpx;
       border-radius: 4rpx;
       margin: 0 20rpx;
 }
 .table.data-v-790caf18 {
   color: #333;
   text-align: center;
-  font-size: 20rpx;
+  font-size: 22rpx;
   margin: 0 15rpx;
 }
 .table-hd.data-v-790caf18 {
-  font-size: 24rpx;
+  font-size: 28rpx;
   border-top: 1px solid #eee;
-  padding: 14rpx 0;
+  padding: 20rpx 0;
 }
 .table-hd > view.data-v-790caf18:first-child {
     width: 80rpx;
@@ -147,12 +143,19 @@
 }
 .table-bd .table-td.data-v-790caf18 {
     border-top: 1px solid #eee;
-    padding: 10rpx 0;
+    padding: 15rpx 0;
+    font-size: 26rpx;
+}
+.table-bd .table-td .answer.data-v-790caf18 {
+    color: #81a3e2;
 }
 .table-bd .table-td > view.data-v-790caf18:first-child {
     width: 80rpx;
 }
 .table-bd .notice.data-v-790caf18 {
-    width: 22rpx;
+    width: 34rpx;
+}
+.text-red.data-v-790caf18 {
+  color: #e24545 !important;
 }
 

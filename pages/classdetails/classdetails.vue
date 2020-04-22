@@ -5,7 +5,7 @@
 				<span class="cu-tag">{{topic.subjectName}}</span>
 				<span class="cu-tag">{{topic.teacherName}}老师</span>
 			</view>
-			<view class="name">
+			<view class="name text-bold">
 				主题：{{topic.topicName}}
 			</view>
 			<view>{{topic.startDatetime||''}}-{{topic.endDatetime||''}}</view>
@@ -13,15 +13,15 @@
 		<div class="modbox">
 			<div class="flex justify-between userinfobox align-center">
 				<div class="flex-sub">
-					<div>班级正确率名次</div>
+					<div class="text-bold">班级正确率名次</div>
 					<div class="num red">{{detail.classRank||'--'}}</div>
 				</div>
 				<div class="userinfo">
 					<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
-					<view>{{userinfo.stuName||'--'}}</view>
+					<view class="text-bold">{{userinfo.stuName||'--'}}</view>
 				</div>
 				<div class="flex-sub">
-					<div>累计积分</div>
+					<div class="text-bold">累计积分</div>
 					<div class="num">{{detail.totalScore||'--'}}</div>
 				</div>
 			</div>
@@ -30,11 +30,11 @@
 			<div class="piebox flex justify-center">
 				<view>
 					<canvas canvas-id="canvasArcbar2" id="canvasArcbar2" class="charts3"></canvas>
-					<view>本堂课答题正确率</view>
+					<view class="text-bold">本堂课答题正确率</view>
 				</view>
 				<view>
 					<canvas canvas-id="canvasArcbar3" id="canvasArcbar3" class="charts3"></canvas>
-					<view>本堂课班级击败人数</view>
+					<view class="text-bold">本堂课班级击败人数</view>
 				</view>
 			</div>
 		</div>
@@ -58,17 +58,17 @@
 					</view>
 				</div>
 				<div>
-					<view class="flex align-center">
+					<view class="flex align-center text-bold">
 						<text>{{detail.averageCorrectAccuracy||0}}</text>
 						<view class="tag bg-black"></view>
 						<view>班级平均正确率</view>
 					</view>
-					<view class="flex align-center">
+					<view class="flex align-center text-bold">
 						<text>{{detail.bestCorrectAccuracy||0}}</text>
 						<view class="tag bg-red"></view>
 						<view>班级最高综合正确率</view>
 					</view>
-					<view class="flex align-center">
+					<view class="flex align-center text-bold">
 						<text>{{detail.stuCorrectAccuracy||0}}</text>
 						<view class="tag bg-blue"></view>
 						<view>我的正确率</view>
@@ -79,17 +79,17 @@
 		<div class="modbox">
 			<view class="tablebox">
 				<view class="cu-bar bg-white">
-					<view class="action">
+					<view class="action text-bold">
 						答题详情
 					</view>
-					<view class="action ft20 ">
+					<view class="action ft24 ">
 						<text>答题数量共 <text class="text-red margin-left-xs margin-right-xs">{{detail.sendQuestionCount||0}}</text> 题</text>
 						<text class="margin-left">答对数量 <text class="text-red margin-left-xs margin-right-xs">{{detail.answerTrueQuestionCount||0}}</text>
 							题</text>
 					</view>
 				</view>
 				<view class="table">
-					<view class="table-hd flex justify-between">
+					<view class="table-hd flex justify-between text-bold">
 						<view>题号</view>
 						<view class="flex-sub">题目类型</view>
 						<view class="flex-sub">学生答题</view>
@@ -99,8 +99,8 @@
 						<view class="table-td flex justify-between" v-for="(item,index) in detail.studentAnalyseDetail.questionList" :key="index">
 							<view>{{item.questionId}}</view>
 							<view class="flex-sub">{{item.questionName}}</view>
-							<view class="flex-sub" :class="{'text-red':item.answerResult=='false'}">{{item.inputAnswer||'--'}}</view>
-							<view class="flex-sub">{{item.trueAnswer}}</view>
+							<view class="flex-sub answer" :class="{'text-red':item.answerResult=='false'}">{{(item.questionName=='判断题'?(item.inputAnswer=='E'?'√':'×'):item.inputAnswer)||'--'}}</view>
+							<view class="flex-sub answer">{{(item.questionName=='判断题'?(item.trueAnswer=='E'?'√':'×'):item.trueAnswer)||'--'}}</view>
 						</view>
 					</view>
 					<view class="noData" v-if="!detail.studentAnalyseDetail||detail.studentAnalyseDetail.questionList.length<=0">
@@ -112,15 +112,15 @@
 		<div class="modbox">
 			<view class="tablebox">
 				<view class="cu-bar bg-white">
-					<view class="action">
+					<view class="action text-bold">
 						语音题
 					</view>
-					<view class="action ft20 ">
+					<view class="action ft24 ">
 						<text>答题数量共 <text class="text-red margin-left-xs margin-right-xs">{{voiceRecord.length||0}}</text> 题</text>
 					</view>
 				</view>
 				<view class="table">
-					<view class="table-hd flex justify-between">
+					<view class="table-hd flex justify-between text-bold">
 						<view>题号</view>
 						<view class="flex-sub">题目类型</view>
 						<view class="flex-sub">学生答题</view>
@@ -134,7 +134,8 @@
 								<image src="../../static/icon7.png" mode="widthFix" class="notice"></image>
 							</view>
 							<view class="flex-sub" @tap="playVideo(item.trueAnswer,1)">
-								<image src="../../static/icon6.png" mode="widthFix" class="notice"></image>
+								<image src="../../static/icon6.png" mode="widthFix" class="notice" v-if='item.trueAnswer'></image>
+								<text v-else>--</text>
 							</view>
 						</view>
 					</view>
@@ -265,9 +266,9 @@
 					fontSize: 11,
 					legend: false,
 					title: {
-						name: Math.round(chartData.series[0].data * 100) + '%',
-						color: chartData.series[0].color,
-						fontSize: 25 * _self.pixelRatio
+						name: chartData.series[0].data * 100 + '%',
+						color: '#e24545',
+						fontSize: 16 * _self.pixelRatio
 					},
 					subtitle: {
 						name: chartData.series[0].name,
@@ -300,9 +301,9 @@
 					fontSize: 11,
 					legend: false,
 					title: {
-						name: Math.round(chartData.series[0].data * 100) + '%',
+						name: chartData.series[0].data * 100 + '%',
 						color: chartData.series[0].color,
-						fontSize: 25 * _self.pixelRatio
+						fontSize: 16 * _self.pixelRatio
 					},
 					subtitle: {
 						name: chartData.series[0].name,
@@ -330,7 +331,7 @@
 			getvoiceRecord() {
 				postajax(api.getvoiceRecord, {
 					"topicCode": this.topic.topicCode,
-					"stuCode":this.userinfo.stuCode
+					"stuCode": this.userinfo.stuCode
 				}).then(da => {
 					if (da.code == 0) {
 						this.voiceRecord = da.data
@@ -340,7 +341,10 @@
 			playVideo(url, type) {
 				this.innerAudioContext.autoplay = true;
 				this.innerAudioContext.src = type == 1 ? url : (fileUrl + url);
-				this.innerAudioContext.play();
+				console.log(this.innerAudioContext.src)
+				if (this.innerAudioContext.src) {
+					this.innerAudioContext.play();
+				}
 				console.log('播放')
 
 			}
@@ -351,8 +355,8 @@
 
 
 <style scoped lang="scss">
-	.ft20 {
-		font-size: 20upx;
+	.ft24 {
+		font-size: 24upx;
 	}
 
 	.view-page {
@@ -363,7 +367,7 @@
 		background: #f7f7fc;
 
 		.info {
-			font-size: 20upx;
+			font-size: 24upx;
 			color: #333;
 			padding: 20upx 60upx;
 
@@ -372,7 +376,7 @@
 				background: #e281b6;
 				border-radius: 8upx;
 				height: 40upx;
-				font-size: 18upx;
+				font-size: 20upx;
 
 				&+.cu-tag {
 					color: #81a3e2;
@@ -383,7 +387,7 @@
 
 			.name {
 				margin: 6upx 0;
-				font-size: 24upx;
+				font-size: 30upx;
 			}
 		}
 
@@ -402,12 +406,11 @@
 		.userinfobox {
 			padding: 20upx 50upx;
 			text-align: center;
-			font-size: 20upx;
+			font-size: 28upx;
 			color: #666;
 
 			.userinfo {
 				margin: 0 50upx;
-				font-size: 24upx;
 				color: #333;
 
 				.cu-avatar {
@@ -431,6 +434,7 @@
 		.piebox {
 			padding: 60upx 0;
 			text-align: center;
+			font-size: 28upx;
 		}
 	}
 
@@ -442,7 +446,7 @@
 	}
 
 	.progress {
-		width: 50upx;
+		width: 60upx;
 		height: 200upx;
 		background: #f4f4fe;
 		display: flex;
@@ -454,14 +458,18 @@
 			position: relative;
 
 			&>text {
-				transform-origin: 50% 100%;
-				-moz-transform: rotate(-90deg);
-				-webkit-transform: rotate(-90deg);
-				display: block;
+				font-size: 18upx;
 				position: absolute;
-				left: -10upx;
-				top: 10upx;
-				filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3)
+				top: -30upx;
+
+				// transform-origin: 50% 100%;
+				// -moz-transform: rotate(-90deg);
+				// -webkit-transform: rotate(-90deg);
+				// display: block;
+				// position: absolute;
+				// left: -10upx;
+				// top: 10upx;
+				// filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3)
 			}
 		}
 	}
@@ -471,28 +479,31 @@
 
 		.bg-red {
 			background: #e4816a;
+			color: #e4816a;
 		}
 
 		.bg-blue {
 			background: #81a3e2;
+			color: #81a3e2;
 		}
 
 		.bg-black {
 			background: #706775;
+			color: #706775;
 		}
 
 		&>div+div {
-			margin-left: 50upx;
+			margin-left: 30upx;
 			color: #706775;
-			font-size: 20upx;
+			font-size: 28upx;
 
 			.flex+.flex {
 				margin-top: 16upx;
 			}
 
 			.tag {
-				height: 20upx;
-				width: 20upx;
+				height: 28upx;
+				width: 28upx;
 				border-radius: 4upx;
 				margin: 0 20upx;
 			}
@@ -501,20 +512,18 @@
 
 	}
 
-	.tablebox {}
-
 	.table {
 		color: #333;
 		text-align: center;
-		font-size: 20upx;
+		font-size: 22upx;
 		margin: 0 15upx;
 
 	}
 
 	.table-hd {
-		font-size: 24upx;
+		font-size: 28upx;
 		border-top: 1px solid #eee;
-		padding: 14upx 0;
+		padding: 20upx 0;
 
 		&>view:first-child {
 			width: 80upx;
@@ -526,15 +535,22 @@
 
 		.table-td {
 			border-top: 1px solid #eee;
-			padding: 10upx 0;
+			padding: 15upx 0;
+			font-size: 26upx;
+			
 		}
+
+		.table-td .answer {color: #81a3e2;}
 
 		.table-td>view:first-child {
 			width: 80upx;
 		}
 
 		.notice {
-			width: 22upx;
+			width: 34upx;
 		}
+	}
+	.text-red{
+		color: #e24545 !important;
 	}
 </style>

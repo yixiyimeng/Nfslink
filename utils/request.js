@@ -33,7 +33,7 @@ request.interceptors.response.use(
 		} else {
 			console.log(response.data.msg)
 			uni.showToast({
-				title: response.data.msg,
+				title: response.data.msg||'请求发生错误了',
 				icon: 'none'
 			})
 			if (response.data.code == 401) {
@@ -50,7 +50,7 @@ request.interceptors.response.use(
 		uni.hideLoading();
 		console.log(err)
 		uni.showToast({
-			title: err.response&&err.response.data.msg,
+			title: err.response&&err.response.data.msg||'请求发生错误了',
 			icon: 'none'
 		})
 		return promise.reject(err)

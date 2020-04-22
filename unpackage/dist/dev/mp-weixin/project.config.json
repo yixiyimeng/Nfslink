@@ -4,13 +4,26 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": true,
-		"postcss": true,
+		"urlCheck": false,
 		"es6": true,
-		"minified": true
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"coverView": true,
+		"autoAudits": false,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		}
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.7.0",
+	"libVersion": "2.10.4",
 	"appid": "wxc6921833a3bb5f17",
 	"projectname": "Nfslink",
 	"simulatorType": "wechat",

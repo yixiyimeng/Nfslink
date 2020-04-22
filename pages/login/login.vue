@@ -45,10 +45,10 @@
 				this.focus = 0;
 			},
 			login() {
-				if (this.password.trim() && this.username.trim()) {
+				if (this.password&&this.password.trim() && this.username&&this.username.trim()) {
 					var param = {
-						username: this.username.trim(),
-						password: this.password.trim()
+						username: this.username,
+						password: this.password
 					}
 					uni.clearStorageSync();
 					postajax(api.login, param).then((da) => {
@@ -125,7 +125,7 @@
 
 				.link {
 					color: #4944ff;
-					font-size: 20upx;
+					font-size: 24upx;
 				}
 
 				&.active {
