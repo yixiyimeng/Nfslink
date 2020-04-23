@@ -94,7 +94,7 @@ export function base64ToString(data) {
 	return result;
 }
 export const basePath='http://113.57.172.27:8880/platform-face'
-export const fileUrl='http://113.57.172.27:8880/platform-face/'
+export const fileUrl='http://113.57.172.27:8880/platform-face'
 export default {
 	formatNumber,
 	formatTime,

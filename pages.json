@@ -6,6 +6,13 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
+		}, {
+			"path": "pages/line",
+			"style": {
+				"usingComponents": {
+					"ff-canvas": "/static/aibokalv-chart/f2-canvas"
+				}
+			}
 		},
 		{
 			"path": "pages/login/login",
@@ -23,7 +30,7 @@
 				"enablePullDownRefresh": true
 			}
 		},
-		
+
 		{
 			"path": "pages/forgetpwd/forgetpwd",
 			"style": {}

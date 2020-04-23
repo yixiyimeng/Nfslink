@@ -1,0 +1,30 @@
+.content {
+  text-align: center;
+  height: 400rpx;
+}
+.logo {
+  height: 200rpx;
+  width: 200rpx;
+  margin-top: 200rpx;
+}
+.title {
+  font-size: 36rpx;
+  color: #8f8f94;
+}
+.page_chart {
+  width: 100vw;
+  height: auto;
+  padding: 25rpx;
+}
+.page_chart .chart-container {
+  width: 100%;
+  height: 500rpx;
+  background: #fff;
+  border-radius: 1.06666667vw;
+}
+.page_chart .nodata {
+  text-align: center;
+  padding: 50rpx;
+  color: #333;
+}
+
