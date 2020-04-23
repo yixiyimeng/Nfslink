@@ -155,7 +155,8 @@ var _default = { data: function data() {return { focus: 0, username: '', passwor
       if (this.password && this.password.trim() && this.username && this.username.trim()) {
         var param = {
           username: this.username,
-          password: this.password };
+          password: this.password,
+          clientType: 'miniProgram' };
 
         uni.clearStorageSync();
         (0, _api.postajax)(_api.api.login, param).then(function (da) {

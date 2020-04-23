@@ -48,7 +48,8 @@
 				if (this.password&&this.password.trim() && this.username&&this.username.trim()) {
 					var param = {
 						username: this.username,
-						password: this.password
+						password: this.password,
+						clientType:'miniProgram'
 					}
 					uni.clearStorageSync();
 					postajax(api.login, param).then((da) => {
