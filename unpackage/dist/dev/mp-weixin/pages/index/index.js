@@ -249,15 +249,49 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
 var _dayjsMin = _interopRequireDefault(__webpack_require__(/*! @/utils/dayjs.min.js */ 46));
 var _api = __webpack_require__(/*! @/utils/api.js */ 34);
 
 
 
-var _uCharts = _interopRequireDefault(__webpack_require__(/*! @/components/u-charts/u-charts.js */ 47));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var lxCalendar = function lxCalendar() {return __webpack_require__.e(/*! import() | components/lx-calendar/lx-calendar */ "components/lx-calendar/lx-calendar").then(__webpack_require__.bind(null, /*! @/components/lx-calendar/lx-calendar.vue */ 70));};
+var _uCharts = _interopRequireDefault(__webpack_require__(/*! @/components/u-charts/u-charts.js */ 47));
 
-var _self;
-var canvaLineA = null;var _default =
+
+var _f = _interopRequireDefault(__webpack_require__(/*! @/static/aibokalv-chart/lib/f2 */ 25));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}var _self;var canvaLineA = null;
+
+_f.default.Util.addEventListener = function (source, type, listener) {
+  source.addListener(type, listener);
+};
+
+_f.default.Util.removeEventListener = function (source, type, listener) {
+  source.removeListener(type, listener);
+};
+
+_f.default.Util.createEvent = function (event, chart) {
+  var type = event.type;
+  var x = 0;
+  var y = 0;
+  var touches = event.touches;
+  if (touches && touches.length > 0) {
+    x = touches[0].x;
+    y = touches[0].y;
+  }
+
+  return {
+    type: type,
+    chart: chart,
+    x: x,
+    y: y };
+
+};
+var chart = null;var _default =
 {
   data: function data() {
     return {
@@ -278,12 +312,17 @@ var canvaLineA = null;var _default =
       topiclist: [],
       userinfo: {},
       isOpen: false,
-      shorttopiclist: [] };
+      shorttopiclist: [],
+      subjectlist: [],
+      subjectCode: null,
+      isChart: false,
+      opts: {
+        lazyLoad: true },
+
+      chartlist: [] };
 
   },
-  components: {
-    lxCalendar: lxCalendar },
-
+  components: {},
   onLoad: function onLoad() {
     _self = this;
 
@@ -307,12 +346,15 @@ var canvaLineA = null;var _default =
       uni.stopPullDownRefresh();
     }, 1000);
   },
+  mounted: function mounted() {
+    // this.$mp.page.selectComponent("#column").init(this.initChart);
+  },
   watch: {
     selectTime: function selectTime(newval, oldval) {
       if (newval != oldval) {
         if (this.userinfo && this.userinfo.stuCode) {
           this.gettopiclist();
-          this.advanceProgress();
+          this.getSubjectList();
         }
       }
     },
@@ -332,39 +374,7 @@ var canvaLineA = null;var _default =
       this.selectTime = this.vNowDate.format('YYYY-MM-DD');
       this.getUserinfo();
     },
-    initChart: function initChart(F2, config) {
-      // 实例化chart
-      var chart = new F2.Chart(config);
-      // 这里按照F2的调用方式正常使用即可，支持所有图表，以下是DEMO
-      var data = [{
-        genre: 'Sports',
-        sold: 275 },
 
-      {
-        genre: 'Strategy',
-        sold: 115 },
-
-      {
-        genre: 'Action',
-        sold: 120 },
-
-      {
-        genre: 'Shooter',
-        sold: 350 },
-
-      {
-        genre: 'Other',
-        sold: 150 }];
-
-
-      chart.source(data);
-      chart.interval().
-      position('genre*sold').
-      color('genre');
-      // 渲染，然后返回chart
-      chart.render();
-      return chart;
-    },
     prevweek: function prevweek() {
       var vNowDate = this.vNowDate.subtract(7, "day");
       this.getdaylist(vNowDate);
@@ -464,22 +474,46 @@ var canvaLineA = null;var _default =
         "queryEndDate": this.enddate + ' 23:59:59',
         "classCode": this.userinfo.classCode,
         "stuCode": this.userinfo.stuCode,
-        "subjectCode": "mathematics" }).
+        "subjectCode": this.subjectCode }).
       then(function (da) {
         {
           console.log(da);
           if (da.code == 0 && da.data) {
             // this.topiclist = da.data;
             var trendTimeLineList = da.data.trendTimeLineList;
-            var categories = ['2020-04-20', '2020-04-21', '2020-04-22', '2020-04-23'];
-            var studentJoinAccuracy = [10, null, null, 20];
-            var studentCorrectAccuracy = [30, null, null, 40];
-            // if (trendTimeLineList && trendTimeLineList.length > 0)
-            // 	for (var i = 0; i < trendTimeLineList.length; i++) {
-            // 		categories.push(trendTimeLineList[i].date)
-            // 		studentJoinAccuracy.push(parseFloat(trendTimeLineList[i].studentCorrectAccuracy.replace(/%/, '')))
-            // 		studentCorrectAccuracy.push(parseFloat(trendTimeLineList[i].studentJoinAccuracy.replace(/%/, '')))
-            // 	}
+            var daynum = (0, _dayjsMin.default)(_this3.enddate).diff((0, _dayjsMin.default)(_this3.startdate), 'day');
+            var categories = [],
+            studentJoinAccuracy = [],
+            studentCorrectAccuracy = [];
+            var studentCorrectAccuracychart = [];
+            var studentJoinAccuracychart = [];
+            for (var i = 0; i <= daynum; i++) {
+              //categories.push(dayjs(this.startdate).add(i, 'day').format('YYYY-MM-DD'))
+              studentCorrectAccuracychart.push({
+                date: (0, _dayjsMin.default)(_this3.startdate).add(i, 'day').format('YYYY-MM-DD'),
+                value: null,
+                type: '综合正确率进步趋势' });
+
+              studentJoinAccuracychart.push({
+                date: (0, _dayjsMin.default)(_this3.startdate).add(i, 'day').format('YYYY-MM-DD'),
+                value: null,
+                type: '参与率进步趋势' });
+
+            }
+
+            if (trendTimeLineList && trendTimeLineList.length > 0)
+            for (var i = 0; i < trendTimeLineList.length; i++) {
+              // categories.push(trendTimeLineList[i].date)
+              var index = studentCorrectAccuracychart.findIndex(function (item) {return item.date == trendTimeLineList[i].date;});
+              if (index > -1) {
+                studentCorrectAccuracychart[index].value = parseFloat(trendTimeLineList[i].studentCorrectAccuracy.replace(
+                /%/, ''));
+                studentJoinAccuracychart[index].value = parseFloat(trendTimeLineList[i].studentJoinAccuracy.replace(/%/, ''));
+              }
+              // studentJoinAccuracy.push(parseFloat(trendTimeLineList[i].studentCorrectAccuracy.replace(/%/, '')))
+              // studentCorrectAccuracy.push(parseFloat(trendTimeLineList[i].studentJoinAccuracy.replace(/%/, '')))
+
+            }
             var series = [{
               data: studentCorrectAccuracy,
               connectNulls: true,
@@ -491,33 +525,43 @@ var canvaLineA = null;var _default =
 
 
             _this3.getServerData(categories, series);
+            _this3.chartlist = [].concat(studentCorrectAccuracychart, studentJoinAccuracychart);
           }
         }
       });
     },
-    checkday: function checkday(index) {var _this4 = this;
-      /* 先判断是否可以点击 */
-      if (!this.daylist[index].isdisable) {
-        this.daylist.forEach(function (item, subindex) {
-          if (index == subindex) {
-            item.isCheck = true;
-            _this4.selectTime = item.allday;
-          } else {
-            item.isCheck = false;
-          }
-        });
-      }
-    },
-    getUserinfo: function getUserinfo() {var _this5 = this;
+    getUserinfo: function getUserinfo() {var _this4 = this;
       (0, _api.postajax)(_api.api.getuserinfo).then(function (da) {
         {
           console.log(da);
           if (da.code == 0 && da.data && da.data.length > 0) {
-            _this5.userinfo = da.data[0];
+            _this4.userinfo = da.data[0];
             uni.setStorageSync('userinfo', da.data[0]);
-            _this5.gettopiclist();
+            _this4.gettopiclist();
+            _this4.getDatePullList();
+            _this4.getSubjectList();
+          }
+        }
+      });
+    },
+    getSubjectList: function getSubjectList() {var _this5 = this;
+      (0, _api.postajax)(_api.api.getSubjectList, {
+        "queryStartDate": this.startdate + ' 00:00:00',
+        "queryEndDate": this.enddate + ' 23:59:59',
+        "classCode": this.userinfo.classCode,
+        "stuCode": this.userinfo.stuCode }).
+      then(function (da) {
+        {
+          _this5.subjectlist = [];
+          _this5.subjectCode = '';
+          if (da.code == 0 && da.data && da.data.length > 0) {
+            _this5.subjectlist = da.data;
+            _this5.subjectCode = _this5.subjectlist[0].value;
+            _this5.isChart = true;
             _this5.advanceProgress();
-            _this5.getDatePullList();
+          } else {
+            /* 清空 */
+            _this5.isChart = false;
           }
         }
       });
@@ -530,8 +574,22 @@ var canvaLineA = null;var _default =
       //这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
       LineA.categories = categories;
       LineA.series = series;
-      _self.showLineA("canvasLineA", LineA);
+      // _self.showLineA("canvasLineA", LineA);
+      this.$mp.page.selectComponent("#column").init(this.initChart);
 
+    },
+    checkday: function checkday(index) {var _this6 = this;
+      /* 先判断是否可以点击 */
+      if (!this.daylist[index].isdisable) {
+        this.daylist.forEach(function (item, subindex) {
+          if (index == subindex) {
+            item.isCheck = true;
+            _this6.selectTime = item.allday;
+          } else {
+            item.isCheck = false;
+          }
+        });
+      }
     },
     showLineA: function showLineA(canvasId, chartData) {
       canvaLineA = new _uCharts.default({
@@ -604,7 +662,7 @@ var canvaLineA = null;var _default =
       this.startdate = e.detail.value;
       /* 更新进步趋势 */
       if (this.startdate && this.enddate) {
-        this.advanceProgress();
+        this.getSubjectList();
       }
     },
     endDateChange: function endDateChange(e) {
@@ -620,7 +678,7 @@ var canvaLineA = null;var _default =
       this.enddate = e.detail.value;
       /* 更新进步趋势 */
       if (this.startdate && this.enddate) {
-        this.advanceProgress();
+        this.getSubjectList();
       }
     },
     showDetails: function showDetails(obj) {
@@ -631,12 +689,88 @@ var canvaLineA = null;var _default =
     },
     change: function change(e) {
       console.log(e);
+    },
+    checkSubject: function checkSubject(obj) {
+      this.subjectCode = obj.value;
+      this.advanceProgress();
+
+    },
+    initChart: function initChart(canvas, width, height) {
+      // 使用 F2 绘制图表
+
+      chart = new _f.default.Chart({
+        el: canvas,
+        width: width,
+        height: height });
+
+
+      chart.source(this.chartlist, {
+        date: {
+          type: 'timeCat',
+          tickCount: 7,
+          mask: 'MM-DD',
+          range: [0, 1] },
+
+        value: {
+          tickCount: 5,
+          formatter: function formatter(ivalue) {
+            return ivalue + '%';
+          },
+          min: 0 } });
+
+
+
+      // chart.scale('time', {
+      // 	tickCount: 6
+      // });
+      chart.tooltip({
+        showCrosshairs: true,
+        onShow: function onShow(ev) {
+          var items = ev.items;
+          items[0].name = items[0].title;
+        } });
+
+
+      chart.axis("date", {
+        label: function label(text, index, total) {
+          var textCfg = {};
+          if (index === 0) {
+            textCfg.textAlign = "left";
+          } else if (index === total - 1) {
+            textCfg.textAlign = "right";
+          }
+
+          return textCfg;
+        } });
+
+
+      chart.
+      line({
+        connectNulls: true }).
+      color('type').
+      position("date*value").
+      shape("smooth");
+
+      chart.point().position('date*value').shape('smooth').
+      style({
+        stroke: '#fff',
+        lineWidth: 1 });
+
+      chart.legend({
+        position: 'bottom',
+        offsetY: -5,
+        align: 'center',
+        titleStyle: {
+          fontSize: 10 } });
+
+
+      chart.render();
+      return chart;
     } },
 
   filters: {
     filternum: function filternum(value) {
       var s = value || 0;
-      console.log(value);
       if (value && value.length > 0) {
 
         s = value.slice(0, value.length - 1);
@@ -645,7 +779,6 @@ var canvaLineA = null;var _default =
     },
     filterTime: function filterTime(value) {
       var s = value || '';
-      console.log(value);
       if (value && value.length > 0) {
 
         s = value.slice(11, value.length);

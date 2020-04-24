@@ -121,7 +121,7 @@
 				</view>
 				<view class="table">
 					<view class="table-hd flex justify-between text-bold">
-						<view>题号</view>
+						<view>序号</view>
 						<view class="flex-sub">题目类型</view>
 						<view class="flex-sub">学生答题</view>
 						<view class="flex-sub">正确答案</view>

@@ -26,8 +26,6 @@
 	"libVersion": "2.7.0",
 	"appid": "wxc6921833a3bb5f17",
 	"projectname": "Nfslink",
-	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,

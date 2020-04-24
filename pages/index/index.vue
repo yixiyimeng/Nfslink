@@ -87,17 +87,24 @@
 						<image src="/static/icon5.png" mode="widthFix"></image>
 					</view>
 				</view>
-				<!-- <view class="navbar flex justify-center">
-					<span class="active">语文</span>
-					<span>数学</span>
-				</view> -->
-				<view class="cu-card">
-					<view class="cu-item shadow">
-						<canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
-					</view>
-				</view>
+				<scroll-view scroll-x="true" class="navbar">
+					<span :class="{'active':item.value==subjectCode}" v-for="(item,index) in subjectlist" :key="index" @tap="checkSubject(item)">{{item.title}}</span>
+				</scroll-view>
 			
-				
+				<view class="cu-card" v-show="isChart">
+					<view class="cu-item shadow">
+						<!-- <canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas> -->
+						<div class="chart-container">
+							<ff-canvas id="column" canvas-id="column" :opts="opts" />
+						</div>
+					</view>
+
+				</view>
+
+				<view class="noData" v-if="!isChart">
+					<image src="/static/noData.png" mode="widthFix"></image>
+				</view>
+
 			</view>
 		</div>
 	</view>
@@ -110,9 +117,36 @@
 		postajax
 	} from '@/utils/api.js'
 	import uCharts from '@/components/u-charts/u-charts.js';
-	import lxCalendar from '@/components/lx-calendar/lx-calendar.vue'
 	var _self;
 	var canvaLineA = null;
+	import F2 from "@/static/aibokalv-chart/lib/f2";
+
+	F2.Util.addEventListener = function(source, type, listener) {
+		source.addListener(type, listener);
+	};
+
+	F2.Util.removeEventListener = function(source, type, listener) {
+		source.removeListener(type, listener);
+	};
+
+	F2.Util.createEvent = function(event, chart) {
+		const type = event.type;
+		let x = 0;
+		let y = 0;
+		const touches = event.touches;
+		if (touches && touches.length > 0) {
+			x = touches[0].x;
+			y = touches[0].y;
+		}
+
+		return {
+			type,
+			chart,
+			x,
+			y
+		};
+	};
+	let chart = null;
 	export default {
 		data() {
 			return {
@@ -133,12 +167,17 @@
 				topiclist: [],
 				userinfo: {},
 				isOpen: false,
-				shorttopiclist: []
+				shorttopiclist: [],
+				subjectlist: [],
+				subjectCode: null,
+				isChart: false,
+				opts: {
+					lazyLoad: true
+				},
+				chartlist: []
 			}
 		},
-		components: {
-			lxCalendar,
-		},
+		components: {},
 		onLoad() {
 			_self = this;
 			//#ifdef MP-ALIPAY
@@ -162,12 +201,15 @@
 				uni.stopPullDownRefresh();
 			}, 1000);
 		},
+		mounted() {
+			// this.$mp.page.selectComponent("#column").init(this.initChart);
+		},
 		watch: {
 			selectTime(newval, oldval) {
 				if (newval != oldval) {
 					if (this.userinfo && this.userinfo.stuCode) {
 						this.gettopiclist();
-						this.advanceProgress();
+						this.getSubjectList();
 					}
 				}
 			},
@@ -187,39 +229,7 @@
 				this.selectTime = this.vNowDate.format('YYYY-MM-DD')
 				this.getUserinfo();
 			},
-			initChart(F2, config) {
-				// 实例化chart
-				const chart = new F2.Chart(config)
-				// 这里按照F2的调用方式正常使用即可，支持所有图表，以下是DEMO
-				const data = [{
-						genre: 'Sports',
-						sold: 275
-					},
-					{
-						genre: 'Strategy',
-						sold: 115
-					},
-					{
-						genre: 'Action',
-						sold: 120
-					},
-					{
-						genre: 'Shooter',
-						sold: 350
-					},
-					{
-						genre: 'Other',
-						sold: 150
-					}
-				]
-				chart.source(data);
-				chart.interval()
-					.position('genre*sold')
-					.color('genre')
-				// 渲染，然后返回chart
-				chart.render()
-				return chart
-			},
+
 			prevweek() {
 				var vNowDate = this.vNowDate.subtract(7, "day")
 				this.getdaylist(vNowDate)
@@ -319,22 +329,46 @@
 					"queryEndDate": this.enddate + ' 23:59:59',
 					"classCode": this.userinfo.classCode,
 					"stuCode": this.userinfo.stuCode,
-					"subjectCode": "mathematics"
+					"subjectCode": this.subjectCode
 				}).then(da => {
 					{
 						console.log(da)
 						if (da.code == 0 && da.data) {
 							// this.topiclist = da.data;
 							var trendTimeLineList = da.data.trendTimeLineList;
-							var categories = ['2020-04-20', '2020-04-21', '2020-04-22', '2020-04-23'];
-							var studentJoinAccuracy = [10, null, null, 20];
-							var studentCorrectAccuracy = [30, null, null, 40];
-							// if (trendTimeLineList && trendTimeLineList.length > 0)
-							// 	for (var i = 0; i < trendTimeLineList.length; i++) {
-							// 		categories.push(trendTimeLineList[i].date)
-							// 		studentJoinAccuracy.push(parseFloat(trendTimeLineList[i].studentCorrectAccuracy.replace(/%/, '')))
-							// 		studentCorrectAccuracy.push(parseFloat(trendTimeLineList[i].studentJoinAccuracy.replace(/%/, '')))
-							// 	}
+							var daynum = dayjs(this.enddate).diff(dayjs(this.startdate), 'day');
+							var categories = [],
+								studentJoinAccuracy = [],
+								studentCorrectAccuracy = [];
+							var studentCorrectAccuracychart = [];
+							var studentJoinAccuracychart = [];
+							for (var i = 0; i <= daynum; i++) {
+								//categories.push(dayjs(this.startdate).add(i, 'day').format('YYYY-MM-DD'))
+								studentCorrectAccuracychart.push({
+									date: dayjs(this.startdate).add(i, 'day').format('YYYY-MM-DD'),
+									value: null,
+									type: '综合正确率进步趋势'
+								})
+								studentJoinAccuracychart.push({
+									date: dayjs(this.startdate).add(i, 'day').format('YYYY-MM-DD'),
+									value: null,
+									type: '参与率进步趋势'
+								})
+							}
+
+							if (trendTimeLineList && trendTimeLineList.length > 0)
+								for (var i = 0; i < trendTimeLineList.length; i++) {
+									// categories.push(trendTimeLineList[i].date)
+									var index = studentCorrectAccuracychart.findIndex(item => item.date == trendTimeLineList[i].date);
+									if (index > -1) {
+										studentCorrectAccuracychart[index].value = parseFloat(trendTimeLineList[i].studentCorrectAccuracy.replace(
+											/%/, ''));
+										studentJoinAccuracychart[index].value = parseFloat(trendTimeLineList[i].studentJoinAccuracy.replace(/%/, ''));
+									}
+									// studentJoinAccuracy.push(parseFloat(trendTimeLineList[i].studentCorrectAccuracy.replace(/%/, '')))
+									// studentCorrectAccuracy.push(parseFloat(trendTimeLineList[i].studentJoinAccuracy.replace(/%/, '')))
+
+								}
 							var series = [{
 								data: studentCorrectAccuracy,
 								connectNulls: true,
@@ -342,13 +376,62 @@
 							}, {
 								data: studentJoinAccuracy,
 								name: '参与率进步趋势',
-								connectNulls: true 
+								connectNulls: true
 							}]
 
 							this.getServerData(categories, series);
+							this.chartlist = [...studentCorrectAccuracychart, ...studentJoinAccuracychart]
 						}
 					}
 				})
+			},
+			getUserinfo() {
+				postajax(api.getuserinfo).then(da => {
+					{
+						console.log(da)
+						if (da.code == 0 && da.data && da.data.length > 0) {
+							this.userinfo = da.data[0];
+							uni.setStorageSync('userinfo', da.data[0]);
+							this.gettopiclist();
+							this.getDatePullList();
+							this.getSubjectList();
+						}
+					}
+				})
+			},
+			getSubjectList() {
+				postajax(api.getSubjectList, {
+					"queryStartDate": this.startdate + ' 00:00:00',
+					"queryEndDate": this.enddate + ' 23:59:59',
+					"classCode": this.userinfo.classCode,
+					"stuCode": this.userinfo.stuCode
+				}).then(da => {
+					{
+						this.subjectlist = [];
+						this.subjectCode = '';
+						if (da.code == 0 && da.data && da.data.length > 0) {
+							this.subjectlist = da.data;
+							this.subjectCode = this.subjectlist[0].value;
+							this.isChart = true;
+							this.advanceProgress();
+						} else {
+							/* 清空 */
+							this.isChart = false;
+						}
+					}
+				})
+			},
+			getServerData(categories, series) {
+				let LineA = {
+					categories: [],
+					series: []
+				};
+				//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
+				LineA.categories = categories;
+				LineA.series = series;
+				// _self.showLineA("canvasLineA", LineA);
+				this.$mp.page.selectComponent("#column").init(this.initChart);
+
 			},
 			checkday(index) {
 				/* 先判断是否可以点击 */
@@ -362,31 +445,6 @@
 						}
 					})
 				}
-			},
-			getUserinfo() {
-				postajax(api.getuserinfo).then(da => {
-					{
-						console.log(da)
-						if (da.code == 0 && da.data && da.data.length > 0) {
-							this.userinfo = da.data[0];
-							uni.setStorageSync('userinfo', da.data[0]);
-							this.gettopiclist();
-							this.advanceProgress();
-							this.getDatePullList();
-						}
-					}
-				})
-			},
-			getServerData(categories, series) {
-				let LineA = {
-					categories: [],
-					series: []
-				};
-				//这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
-				LineA.categories = categories;
-				LineA.series = series;
-				_self.showLineA("canvasLineA", LineA);
-
 			},
 			showLineA(canvasId, chartData) {
 				canvaLineA = new uCharts({
@@ -459,7 +517,7 @@
 				this.startdate = e.detail.value;
 				/* 更新进步趋势 */
 				if (this.startdate && this.enddate) {
-					this.advanceProgress()
+					this.getSubjectList()
 				}
 			},
 			endDateChange(e) {
@@ -475,7 +533,7 @@
 				this.enddate = e.detail.value;
 				/* 更新进步趋势 */
 				if (this.startdate && this.enddate) {
-					this.advanceProgress()
+					this.getSubjectList()
 				}
 			},
 			showDetails(obj) {
@@ -486,12 +544,88 @@
 			},
 			change(e) {
 				console.log(e);
+			},
+			checkSubject(obj) {
+				this.subjectCode = obj.value;
+				this.advanceProgress()
+
+			},
+			initChart(canvas, width, height) {
+				// 使用 F2 绘制图表
+
+				chart = new F2.Chart({
+					el: canvas,
+					width,
+					height
+				});
+
+				chart.source(this.chartlist, {
+					date: {
+						type: 'timeCat',
+						tickCount: 7,
+						mask: 'MM-DD',
+						range: [0, 1]
+					},
+					value: {
+						tickCount: 5,
+						formatter: function formatter(ivalue) {
+							return ivalue + '%';
+						},
+						min: 0
+					}
+
+				});
+				// chart.scale('time', {
+				// 	tickCount: 6
+				// });
+				chart.tooltip({
+					showCrosshairs: true,
+					onShow: function onShow(ev) {
+						var items = ev.items;
+						items[0].name = items[0].title;
+					}
+				});
+
+				chart.axis("date", {
+					label: function label(text, index, total) {
+						var textCfg = {};
+						if (index === 0) {
+							textCfg.textAlign = "left";
+						} else if (index === total - 1) {
+							textCfg.textAlign = "right";
+						}
+
+						return textCfg;
+					}
+				});
+
+				chart
+					.line({
+						connectNulls: true
+					}).color('type')
+					.position("date*value")
+					.shape("smooth");
+
+				chart.point().position('date*value').shape('smooth')
+					.style({
+						stroke: '#fff',
+						lineWidth: 1
+					})
+				chart.legend({
+					position: 'bottom',
+					offsetY: -5,
+					align: 'center',
+					titleStyle: {
+						fontSize: 10
+					}
+				});
+				chart.render();
+				return chart;
 			}
 		},
 		filters: {
 			filternum(value) {
 				let s = value || 0;
-				console.log(value)
 				if (value && value.length > 0) {
 
 					s = value.slice(0, value.length - 1)
@@ -500,7 +634,6 @@
 			},
 			filterTime(value) {
 				let s = value || '';
-				console.log(value)
 				if (value && value.length > 0) {
 
 					s = value.slice(11, value.length)
@@ -690,13 +823,15 @@
 			}
 
 			.navbar {
-				padding: 25upx 0 0;
-				font-size: 20upx;
+				padding: 25upx 30upx 0;
+				font-size: 28upx;
+				white-space: nowrap;
+				overflow: auto;
 				color: #333;
 
 				span {
-					padding: 0 16upx;
-					line-height: 36upx;
+					padding: 0 24upx;
+					line-height: 46upx;
 					margin: 0 10upx;
 					display: inline-block;
 					border-radius: 50upx;
@@ -732,6 +867,11 @@
 			height: 500upx;
 			background-color: #FFFFFF;
 			position: relative;
+		}
+
+		.chart-container {
+			width: 100%;
+			height: 500upx;
 		}
 	}
 </style>

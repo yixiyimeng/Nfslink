@@ -121,13 +121,15 @@
       line-height: 60rpx;
 }
 .view-page .main .navbar.data-v-3d67d53e {
-      padding: 25rpx 0 0;
-      font-size: 20rpx;
+      padding: 25rpx 30rpx 0;
+      font-size: 28rpx;
+      white-space: nowrap;
+      overflow: auto;
       color: #333;
 }
 .view-page .main .navbar ._span.data-v-3d67d53e {
-        padding: 0 16rpx;
-        line-height: 36rpx;
+        padding: 0 24rpx;
+        line-height: 46rpx;
         margin: 0 10rpx;
         display: inline-block;
         border-radius: 50rpx;
@@ -157,5 +159,9 @@
     height: 500rpx;
     background-color: #FFFFFF;
     position: relative;
+}
+.view-page .chart-container.data-v-3d67d53e {
+    width: 100%;
+    height: 500rpx;
 }
 
