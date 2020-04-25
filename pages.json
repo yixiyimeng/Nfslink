@@ -47,6 +47,10 @@
 				"enablePullDownRefresh": true
 			}
         }
+        ,{
+            "path" : "pages/editUserinfo/editUserinfo",
+            "style" : {}
+        }
     ],
 	"tabBar": {
 		"color": "#7f8389",

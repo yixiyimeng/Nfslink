@@ -3,7 +3,7 @@
 		<image src="/static/topbg.jpg" mode="widthFix" class="topbg"></image>
 		<view class="main">
 			<!-- 个人信息 -->
-			<div class="userinfo flex align-center">
+			<div class="userinfo flex align-center" @tap="showDetails">
 				<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
 				<view class="flex-sub">
 					<view class="flex">
@@ -123,6 +123,11 @@
 			},
 			closeActionSheet: function() {
 				this.showActionSheet = false
+			},
+			showDetails(){
+				uni.navigateTo({
+					url:'/pages/editUserinfo/editUserinfo'
+				})
 			}
 		}
 	}

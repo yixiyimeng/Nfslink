@@ -1,0 +1,12 @@
+.cu-form-group input {
+  text-align: right;
+}
+.menu.edit .cu-form-group input {
+  text-align: left;
+}
+.cu-form-group .title {
+  min-width: calc(4em + 15px);
+  font-weight: bold;
+  font-size: 34rpx;
+}
+

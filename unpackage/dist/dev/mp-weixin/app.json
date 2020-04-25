@@ -7,7 +7,8 @@
     "pages/classdetails/classdetails",
     "pages/forgetpwd/forgetpwd",
     "pages/homework/homework",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/editUserinfo/editUserinfo"
   ],
   "subPackages": [],
   "window": {
