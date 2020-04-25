@@ -255,6 +255,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 var _uCharts = _interopRequireDefault(__webpack_require__(/*! @/components/u-charts/u-charts.js */ 47));
 var _api = __webpack_require__(/*! @/utils/api.js */ 34);
 
@@ -409,16 +412,23 @@ var _index = __webpack_require__(/*! @/utils/index.js */ 36);function _interopRe
 //
 //
 //
+//
+//
+//
 var _self;var canvaArcbar1;var _default = { data: function data() {return { cWidth: '', cHeight: '', cWidth3: '', //圆弧进度图
       cHeight3: '', //圆弧进度图
       arcbarWidth: '', //圆弧进度图，进度条宽度,此设置可使各端宽度一致
-      pixelRatio: 1, topic: {}, detail: {}, voiceRecord: [], innerAudioContext: null, userinfo: {} };}, onLoad: function onLoad(option) {var _this = this;_self = this;this.cWidth3 = uni.upx2px(250); //这里要与样式的宽高对应
+      pixelRatio: 1, topic: {}, detail: {}, voiceRecord: [], innerAudioContext: null, userinfo: {}, typeindex: 0, playindex: 0, ispalying: false };}, onLoad: function onLoad(option) {var _this = this;_self = this;this.cWidth3 = uni.upx2px(250); //这里要与样式的宽高对应
     this.cHeight3 = uni.upx2px(250); //这里要与样式的宽高对应
     this.arcbarWidth = uni.upx2px(34);this.cWidth = uni.upx2px(700); //这里要与样式的宽高对应
     this.cHeight = uni.upx2px(500); //这里要与样式的宽高对应
-    this.userinfo = uni.getStorageSync('userinfo'); /* 获取主题信息 */this.topic = JSON.parse(decodeURIComponent(option.info));console.log(this.topic);this.init();this.innerAudioContext = uni.createInnerAudioContext();this.innerAudioContext.onPlay(function () {console.log('开始播放');});this.innerAudioContext.onEnded(function () {_this.innerAudioContext.src = '';console.log('开始结束');});}, onPullDownRefresh: function onPullDownRefresh() {this.init();setTimeout(function () {uni.stopPullDownRefresh();}, 1000);}, methods: { init: function init() {this.getstudentAnalyseDetail();this.getvoiceRecord();}, getstudentAnalyseDetail: function getstudentAnalyseDetail() {var _this2 = this;(0, _api.postajax)(_api.api.studentAnalyseDetail, { "topicCode": this.topic.topicCode, "stuCode": this.userinfo.stuCode }).then(function (da) {{console.log(da);if (da.code == 0) {_this2.detail = da.data;_this2.getServerData();}}});}, getServerData: function getServerData() {var Arcbar2 = { series: [] };var Arcbar3 = { series: [] }; //这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
+    this.userinfo = uni.getStorageSync('stuinfo'); /* 获取主题信息 */this.topic = JSON.parse(decodeURIComponent(option.info));console.log(this.topic);this.init();this.innerAudioContext = uni.createInnerAudioContext();this.innerAudioContext.onPlay(function () {_this.ispalying = true;console.log('开始播放');});this.innerAudioContext.onEnded(function () {_this.innerAudioContext.src = '';_this.typeindex = 0;_this.playindex = 0;_this.ispalying = false;console.log('开始结束');});}, onPullDownRefresh: function onPullDownRefresh() {this.init();setTimeout(function () {uni.stopPullDownRefresh();}, 1000);}, methods: { init: function init() {this.getstudentAnalyseDetail();this.getvoiceRecord();}, getstudentAnalyseDetail: function getstudentAnalyseDetail() {var _this2 = this;(0, _api.postajax)(_api.api.studentAnalyseDetail, { "topicCode": this.topic.topicCode, "stuCode": this.userinfo.stuCode }).then(function (da) {{console.log(da);if (da.code == 0) {_this2.detail = da.data;_this2.getServerData();}}});}, getServerData: function getServerData() {var Arcbar2 = { series: [] };var Arcbar3 = { series: [] }; //这里我后台返回的是数组，所以用等于，如果您后台返回的是单条数据，需要push进去
       Arcbar2.series = [{ name: '正确率', "data": this.detail.stuCorrectAccuracy ? this.detail.stuCorrectAccuracy.slice(0, this.detail.stuCorrectAccuracy.length - 1) / 100 : 0, "color": "#81a3e2" }];Arcbar3.series = [{ name: '击败人数比', "data": this.detail.defeatStuCount ? this.detail.defeatStuCount.slice(0, this.detail.defeatStuCount.length - 1) / 100 : 0, "color": "#99c2cc" }];_self.showArcbar2("canvasArcbar2", Arcbar2);_self.showArcbar3("canvasArcbar3", Arcbar3);}, showArcbar2: function showArcbar2(canvasId, chartData) {new _uCharts.default({ $this: _self, canvasId: canvasId, type: 'arcbar', fontSize: 11, legend: false, title: { name: chartData.series[0].data * 100 + '%', color: '#e24545', fontSize: 16 * _self.pixelRatio }, subtitle: { name: chartData.series[0].name, color: '#666666', fontSize: 12 * _self.pixelRatio }, extra: { arcbar: { type: 'circle', width: _self.arcbarWidth * _self.pixelRatio, //圆弧的宽度
-            backgroundColor: '#e28193', startAngle: 1.25 } }, background: '#FFFFFF', pixelRatio: _self.pixelRatio, series: chartData.series, animation: true, width: _self.cWidth3 * _self.pixelRatio, height: _self.cHeight3 * _self.pixelRatio, dataLabel: true });}, showArcbar3: function showArcbar3(canvasId, chartData) {new _uCharts.default({ $this: _self, canvasId: canvasId, type: 'arcbar', fontSize: 11, legend: false, title: { name: chartData.series[0].data * 100 + '%', color: chartData.series[0].color, fontSize: 16 * _self.pixelRatio }, subtitle: { name: chartData.series[0].name, color: '#333', fontSize: 12 * _self.pixelRatio }, extra: { arcbar: {
+            backgroundColor: '#e28193', startAngle: 1.25 } }, background: '#FFFFFF', pixelRatio: _self.pixelRatio, series: chartData.series, animation: true, width: _self.cWidth3 * _self.pixelRatio, height: _self.cHeight3 * _self.pixelRatio, dataLabel: true });}, showArcbar3: function showArcbar3(canvasId, chartData) {new _uCharts.default({ $this: _self, canvasId: canvasId, type: 'arcbar', fontSize: 11, legend: false, title: { name: chartData.series[0].data * 100 + '%', color: chartData.series[0].color, fontSize: 16 * _self.pixelRatio }, subtitle: { name: chartData.series[0].name, color: '#333',
+          fontSize: 12 * _self.pixelRatio },
+
+        extra: {
+          arcbar: {
             type: 'circle', //整圆类型进度条图
             width: _self.arcbarWidth * _self.pixelRatio, //圆弧的宽度
             backgroundColor: '#e281b6',
@@ -445,9 +455,11 @@ var _self;var canvaArcbar1;var _default = { data: function data() {return { cWid
         }
       });
     },
-    playVideo: function playVideo(url, type) {
+    playVideo: function playVideo(url, index, type) {
       this.innerAudioContext.autoplay = true;
       this.innerAudioContext.src = type == 1 ? url : _index.fileUrl + url;
+      this.typeindex = type;
+      this.playindex = index;
       console.log(this.innerAudioContext.src);
       if (this.innerAudioContext.src) {
         this.innerAudioContext.play();

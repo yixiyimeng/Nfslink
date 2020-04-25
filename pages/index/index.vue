@@ -180,19 +180,6 @@
 		components: {},
 		onLoad() {
 			_self = this;
-			//#ifdef MP-ALIPAY
-			uni.getSystemInfo({
-				success: function(res) {
-					if (res.pixelRatio > 1) {
-						//正常这里给2就行，如果pixelRatio=3性能会降低一点
-						//_self.pixelRatio =res.pixelRatio;
-						_self.pixelRatio = 2;
-					}
-				}
-			});
-			//#endif
-			this.cWidth = uni.upx2px(700);
-			this.cHeight = uni.upx2px(500);
 			this.init();
 		},
 		onPullDownRefresh() {
@@ -391,7 +378,7 @@
 						console.log(da)
 						if (da.code == 0 && da.data && da.data.length > 0) {
 							this.userinfo = da.data[0];
-							uni.setStorageSync('userinfo', da.data[0]);
+							uni.setStorageSync('stuinfo', da.data[0]);
 							this.gettopiclist();
 							this.getDatePullList();
 							this.getSubjectList();

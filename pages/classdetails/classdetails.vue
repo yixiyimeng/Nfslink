@@ -100,7 +100,7 @@
 							<view>{{item.questionId}}</view>
 							<view class="flex-sub">{{item.questionName}}</view>
 							<view class="flex-sub answer" :class="{'text-red':item.answerResult=='false'}">{{(item.questionName=='判断题'?(item.inputAnswer=='E'?'√':'×'):item.inputAnswer)||'--'}}</view>
-							<view class="flex-sub answer">{{(item.questionName=='判断题'?(item.trueAnswer=='E'?'√':'×'):item.trueAnswer)||'--'}}</view>
+							<view class="flex-sub answer">{{((item.questionName=='判断题'||item.questionName=='单选判断')?(item.trueAnswer=='E'?'√':'×'):item.trueAnswer)||'--'}}</view>
 						</view>
 					</view>
 					<view class="noData" v-if="!detail.studentAnalyseDetail||detail.studentAnalyseDetail.questionList.length<=0">
@@ -127,15 +127,18 @@
 						<view class="flex-sub">正确答案</view>
 					</view>
 					<view class="table-bd">
-						<view class="table-td flex justify-between" v-for="(item,index) in voiceRecord" :key="index">
+						<view class="table-td flex justify-between  align-center" v-for="(item,index) in voiceRecord" :key="index">
 							<view>{{index+1}}</view>
 							<view class="flex-sub">{{item.questionType}}</view>
-							<view class="flex-sub" @tap="playVideo(item.voiceFileUrl,0)">
-								<image src="../../static/icon7.png" mode="widthFix" class="notice"></image>
+							<view class="flex-sub" @tap="playVideo(item.voiceFileUrl,index,0)">
+								<image src="../../static/icon7.png" mode="widthFix" class="notice" v-if="!(playindex==index&&typeindex==0&&ispalying)"></image>
+								<image src="../../static/icon8.png" mode="widthFix" class="notice" v-if="playindex==index&&typeindex==0&&ispalying"></image>
 							</view>
-							<view class="flex-sub" @tap="playVideo(item.trueAnswer,1)">
-								<image src="../../static/icon6.png" mode="widthFix" class="notice" v-if='item.trueAnswer'></image>
-								<text v-else>--</text>
+							<view class="flex-sub" @tap="playVideo(item.trueAnswer,index,1)">
+								<image src="../../static/icon6.png" mode="widthFix" class="notice" v-if='item.trueAnswer&&!(playindex==index&&typeindex==1&&ispalying)'
+								 ></image>
+								<image src="../../static/icon8.png" mode="widthFix" class="notice" v-if="item.trueAnswer&&(playindex==index&&typeindex==1&&ispalying)"></image>
+								<text v-if="!item.trueAnswer">--</text>
 							</view>
 						</view>
 					</view>
@@ -172,7 +175,10 @@
 				detail: {},
 				voiceRecord: [],
 				innerAudioContext: null,
-				userinfo: {}
+				userinfo: {},
+				typeindex: 0,
+				playindex: 0,
+				ispalying: false
 			}
 		},
 		onLoad(option) {
@@ -193,17 +199,21 @@
 			this.arcbarWidth = uni.upx2px(34);
 			this.cWidth = uni.upx2px(700); //这里要与样式的宽高对应
 			this.cHeight = uni.upx2px(500); //这里要与样式的宽高对应
-			this.userinfo = uni.getStorageSync('userinfo')
+			this.userinfo = uni.getStorageSync('stuinfo')
 			/* 获取主题信息 */
 			this.topic = JSON.parse(decodeURIComponent(option.info));
 			console.log(this.topic)
 			this.init();
 			this.innerAudioContext = uni.createInnerAudioContext();
 			this.innerAudioContext.onPlay(() => {
+				this.ispalying = true
 				console.log('开始播放');
 			});
 			this.innerAudioContext.onEnded(() => {
 				this.innerAudioContext.src = '';
+				this.typeindex = 0;
+				this.playindex = 0;
+				this.ispalying = false;
 				console.log('开始结束');
 			})
 		},
@@ -338,9 +348,11 @@
 					}
 				})
 			},
-			playVideo(url, type) {
+			playVideo(url, index, type) {
 				this.innerAudioContext.autoplay = true;
 				this.innerAudioContext.src = type == 1 ? url : (fileUrl + url);
+				this.typeindex = type;
+				this.playindex = index;
 				console.log(this.innerAudioContext.src)
 				if (this.innerAudioContext.src) {
 					this.innerAudioContext.play();
@@ -536,11 +548,14 @@
 		.table-td {
 			border-top: 1px solid #eee;
 			padding: 15upx 0;
+			height: 70upx;
 			font-size: 26upx;
-			
+
 		}
 
-		.table-td .answer {color: #81a3e2;}
+		.table-td .answer {
+			color: #81a3e2;
+		}
 
 		.table-td>view:first-child {
 			width: 80upx;
@@ -548,9 +563,11 @@
 
 		.notice {
 			width: 34upx;
+		
 		}
 	}
-	.text-red{
+
+	.text-red {
 		color: #e24545 !important;
 	}
 </style>

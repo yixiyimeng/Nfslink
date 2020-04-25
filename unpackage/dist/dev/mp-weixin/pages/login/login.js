@@ -163,6 +163,7 @@ var _default = { data: function data() {return { focus: 0, username: '', passwor
           console.log(da);
           if (da.code == 0) {
             uni.setStorageSync('loginParam', param);
+            uni.setStorageSync('userinfo', da.data);
             uni.switchTab({
               url: '/pages/index/index' });
 

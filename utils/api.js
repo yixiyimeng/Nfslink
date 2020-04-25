@@ -17,7 +17,8 @@ export const api = {
 	studentAnalyseDetail:'/inte/homeSchool/studentAnalyseDetail',//答题记录
 	getvoiceRecord:'/inte/homeSchool/voiceRecord',//语言记录
 	getDatePullList:'/inte/homeSchool/getDatePullList',
-	getSubjectList:'/inte/homeSchool/advanceProgressPullData'//获取进步趋势的科目
+	getSubjectList:'/inte/homeSchool/advanceProgressPullData',//获取进步趋势的科目
+	logout: '/plat/logout',
 }
 export function getajax(url) {
 	return $http.get(url)

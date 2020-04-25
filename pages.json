@@ -41,7 +41,13 @@
 			"path": "pages/homework/homework",
 			"style": {}
 		}
-	],
+	    ,{
+            "path" : "pages/mine/mine",
+            "style" : {
+				"enablePullDownRefresh": true
+			}
+        }
+    ],
 	"tabBar": {
 		"color": "#7f8389",
 		"selectedColor": "#175ee3",
@@ -55,10 +61,10 @@
 			},
 
 			{
-				"pagePath": "pages/homework/homework",
+				"pagePath": "pages/mine/mine",
 				"iconPath": "/static/tabbar/user.png",
 				"selectedIconPath": "/static/tabbar/user_cur.png",
-				"text": "作业"
+				"text": "我的"
 			}
 		]
 	},

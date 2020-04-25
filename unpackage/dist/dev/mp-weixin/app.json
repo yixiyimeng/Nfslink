@@ -6,7 +6,8 @@
     "pages/index/index",
     "pages/classdetails/classdetails",
     "pages/forgetpwd/forgetpwd",
-    "pages/homework/homework"
+    "pages/homework/homework",
+    "pages/mine/mine"
   ],
   "subPackages": [],
   "window": {
@@ -27,10 +28,10 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/homework/homework",
+        "pagePath": "pages/mine/mine",
         "iconPath": "/static/tabbar/user.png",
         "selectedIconPath": "/static/tabbar/user_cur.png",
-        "text": "作业"
+        "text": "我的"
       }
     ]
   },

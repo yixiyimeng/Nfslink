@@ -325,19 +325,6 @@ var chart = null;var _default =
   components: {},
   onLoad: function onLoad() {
     _self = this;
-
-
-
-
-
-
-
-
-
-
-
-    this.cWidth = uni.upx2px(700);
-    this.cHeight = uni.upx2px(500);
     this.init();
   },
   onPullDownRefresh: function onPullDownRefresh() {
@@ -536,7 +523,7 @@ var chart = null;var _default =
           console.log(da);
           if (da.code == 0 && da.data && da.data.length > 0) {
             _this4.userinfo = da.data[0];
-            uni.setStorageSync('userinfo', da.data[0]);
+            uni.setStorageSync('stuinfo', da.data[0]);
             _this4.gettopiclist();
             _this4.getDatePullList();
             _this4.getSubjectList();

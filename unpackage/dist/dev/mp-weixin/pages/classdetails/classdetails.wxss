@@ -144,6 +144,7 @@
 .table-bd .table-td.data-v-790caf18 {
     border-top: 1px solid #eee;
     padding: 15rpx 0;
+    height: 70rpx;
     font-size: 26rpx;
 }
 .table-bd .table-td .answer.data-v-790caf18 {

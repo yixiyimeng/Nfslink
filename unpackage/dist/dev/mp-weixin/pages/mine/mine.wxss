@@ -1,0 +1,91 @@
+.mt10 {
+  margin-top: 10rpx;
+}
+.pageview {
+  position: relative;
+}
+.pageview .topbg {
+    position: absolute;
+    width: 100%;
+}
+.pageview .main {
+    position: relative;
+    z-index: 999;
+}
+.pageview .main .userinfo {
+      color: #fff;
+      font-size: 24rpx;
+      padding: 35rpx;
+}
+.pageview .main .userinfo .cu-avatar {
+        border: 5rpx solid #fff;
+        height: 120rpx;
+        width: 120rpx;
+        margin-right: 22rpx;
+}
+.pageview .main .userinfo .name {
+        font-size: 36rpx;
+        margin-right: 10rpx;
+}
+.pageview .main .userinfo .cu-tag {
+        color: #333;
+        font-size: 24rpx;
+        line-height: 36rpx;
+        margin-top: 5rpx;
+}
+.pageview .main .userinfo .cuIcon-right {
+        font-size: 40rpx;
+}
+.pageview .main .stuinfo {
+      margin: 0 37rpx;
+      overflow: hidden;
+      border-radius: 20rpx;
+      color: #333;
+      font-size: 26rpx;
+}
+.pageview .main .stuinfo .stuname {
+        background: #eaf0fc;
+        line-height: 45rpx;
+        font-size: 28rpx;
+}
+.pageview .main .stuinfo .stuname ._span {
+          height: 45rpx;
+          background: #fff;
+          padding: 0 25rpx;
+          display: inline-block;
+}
+.pageview .main .stuinfo .stuname + view {
+          padding: 30rpx 50rpx;
+}
+.pageview .main .stuinfo .stuname + view .cu-avatar {
+            border: 5rpx solid #fff;
+            height: 80rpx;
+            width: 80rpx;
+}
+.pageview .main .stuinfo .stuname + view .line {
+            margin: 0 12rpx;
+            width: 1px;
+            height: 46rpx;
+            background: #ccc;
+}
+.pageview .main .cu-list.menu > .cu-item .content > image {
+      width: 1.2em;
+      height: 1.2em;
+      margin-right: 20rpx;
+}
+.pageview .main .menu {
+      margin: 10rpx 40rpx;
+      font-size: 34rpx;
+      color: #333;
+      font-weight: blod;
+}
+.pageview .exitBtn {
+    border-top: 10rpx solid #f7f7fc;
+    border-bottom: 10rpx solid #f7f7fc;
+    line-height: 80rpx;
+    text-align: center;
+    color: #333;
+    font-size: 34rpx;
+    font-weight: bold;
+}
+

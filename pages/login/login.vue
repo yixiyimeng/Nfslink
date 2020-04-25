@@ -56,6 +56,7 @@
 						console.log(da)
 						if (da.code == 0) {
 							uni.setStorageSync('loginParam', param)
+							uni.setStorageSync('userinfo', da.data)
 							uni.switchTab({
 								url: '/pages/index/index'
 							})
