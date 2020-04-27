@@ -6,7 +6,7 @@
 		<view class="group">
 			<view class="row flex align-center" :class="{ active: focus == 1 }">
 				<i class="user"></i>
-				<input type="text" class="flex-sub" @focus="focustxt(1)" @blur="blurtxt" placeholder="请输入学校预留手机号" v-model.lazy="username" />
+				<input type="text" class="flex-sub" @focus="focustxt(1)" @blur="blurtxt" placeholder="请输入手机号或者账户" v-model.lazy="username" />
 			</view>
 			<view class="row flex align-center" :class="{ active: focus == 2 }">
 				<i class="pwd"></i>
