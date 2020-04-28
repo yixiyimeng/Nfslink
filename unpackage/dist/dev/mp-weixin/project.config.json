@@ -4,26 +4,13 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": false,
-		"es6": true,
+		"urlCheck": true,
 		"postcss": true,
-		"minified": true,
-		"newFeature": true,
-		"coverView": true,
-		"autoAudits": false,
-		"showShadowRootInWxmlPanel": true,
-		"scopeDataCheck": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		}
+		"es6": true,
+		"minified": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.11.0",
+	"libVersion": "2.7.0",
 	"appid": "wxc6921833a3bb5f17",
 	"projectname": "Nfslink",
 	"simulatorType": "wechat",
@@ -37,13 +24,28 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
 		"game": {
+			"current": -1,
+			"list": []
+		},
+		"gamePlugin": {
 			"current": -1,
 			"list": []
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": []
+			"list": [
+				{
+					"id": -1,
+					"name": "pages/forgetpwd/forgetpwd",
+					"pathName": "pages/forgetpwd/forgetpwd",
+					"scene": null
+				}
+			]
 		}
 	}
 }
