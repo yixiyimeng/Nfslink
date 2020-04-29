@@ -7,12 +7,12 @@
     width: 100%;
 }
 .view-page .group.data-v-0fe02e2c {
-    margin: 220rpx auto 0;
-    width: 542rpx;
+    margin: 180rpx auto 0;
+    width: 580rpx;
 }
 .view-page .group .row.data-v-0fe02e2c {
       border-radius: 100rpx;
-      height: 80rpx;
+      height: 100rpx;
       background: #fff;
       border: 1px solid #eee;
       padding: 0 40rpx;
@@ -37,11 +37,12 @@
 .view-page .group .row input.data-v-0fe02e2c {
         background: none;
         border: none;
-        line-height: 80rpx;
+        line-height: 100rpx;
+        font-size: 30rpx;
 }
 .view-page .group .row .link.data-v-0fe02e2c {
         color: #4944ff;
-        font-size: 24rpx;
+        font-size: 26rpx;
 }
 .view-page .group .row.active.data-v-0fe02e2c {
         border-color: #4944ff;
@@ -55,7 +56,7 @@
 .view-page .group .loginBtn.data-v-0fe02e2c {
       color: #fff;
       background: #4944ff;
-      line-height: 80rpx;
+      line-height: 100rpx;
       text-align: center;
       margin: 50rpx auto 0;
       border-radius: 100rpx;

@@ -87,12 +87,12 @@
 		}
 
 		.group {
-			margin: 220upx auto 0;
-			width: 542upx;
+			margin: 180upx auto 0;
+			width: 580upx;
 
 			.row {
 				border-radius: 100upx;
-				height: 80upx;
+				height: 100upx;
 				background: #fff;
 				border: 1px solid #eee;
 				padding: 0 40upx;
@@ -122,12 +122,13 @@
 				input {
 					background: none;
 					border: none;
-					line-height: 80upx;
+					line-height: 100upx;
+					font-size: 30upx;
 				}
 
 				.link {
 					color: #4944ff;
-					font-size: 24upx;
+					font-size: 26upx;
 				}
 
 				&.active {
@@ -146,7 +147,7 @@
 			.loginBtn {
 				color: #fff;
 				background: #4944ff;
-				line-height: 80upx;
+				line-height: 100upx;
 				text-align: center;
 				margin: 50upx auto 0;
 				border-radius: 100upx;

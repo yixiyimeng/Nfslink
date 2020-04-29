@@ -90,7 +90,7 @@
 				<scroll-view scroll-x="true" class="navbar">
 					<span :class="{'active':item.value==subjectCode}" v-for="(item,index) in subjectlist" :key="index" @tap="checkSubject(item)">{{item.title}}</span>
 				</scroll-view>
-			
+
 				<view class="cu-card" v-show="isChart">
 					<view class="cu-item shadow">
 						<!-- <canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas> -->
@@ -565,11 +565,24 @@
 				// chart.scale('time', {
 				// 	tickCount: 6
 				// });
+				// chart.tooltip({
+				// 	showCrosshairs: true,
+				// 	onShow: function onShow(ev) {
+				// 		var items = ev.items;
+				// 		items[0].name = items[0].title;
+				// 	}
+				// });
 				chart.tooltip({
 					showCrosshairs: true,
 					onShow: function onShow(ev) {
 						var items = ev.items;
-						items[0].name = items[0].title;
+						console.log(items)
+						if (items.length >= 3) {
+							items[2].name = '综合正确率进步趋势';
+						}
+						if (items.length >= 4) {
+							items[3].name = '参与率进步趋势';
+						}
 					}
 				});
 

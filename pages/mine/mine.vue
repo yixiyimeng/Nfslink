@@ -42,10 +42,10 @@
 					</view>
 				</view>
 				<view class="cu-item">
-					<view class="content align-center flex">
+					<navigator class="content align-center flex" url="/pages/forgetpwd/forgetpwd" hover-class="none">
 						<image src="/static/icon11.png" class="png" mode="aspectFit"></image>
 						<text>修改密码</text>
-					</view>
+					</navigator>
 				</view>
 				<view class="cu-item">
 					<view class="content align-center flex">

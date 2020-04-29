@@ -105,38 +105,78 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var avatar = function avatar() {return Promise.all(/*! import() | components/yq-avatar/yq-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/yq-avatar/yq-avatar")]).then(__webpack_require__.bind(null, /*! @/components/yq-avatar/yq-avatar.vue */ 95));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {
   data: function data() {
     return {
       edit: false,
+      avatarUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
       userinfo: {} };
 
   },
+  components: {
+    avatar: avatar },
+
   onLoad: function onLoad() {
     this.userinfo = uni.getStorageSync('userinfo');
-  } };exports.default = _default;
+  },
+  methods: {
+    doBefore: function doBefore() {
+
+    },
+    doUpload: function doUpload(rsp) {
+      console.log(rsp);
+      this.avatarUrl = rsp.path;
+      // this.$set(this.urls, rsp.index, rsp.path);
+      return;
+      uni.uploadFile({
+        url: '', //仅为示例，非真实的接口地址
+        filePath: rsp.path,
+        name: 'avatar',
+        formData: {
+          'avatar': rsp.path },
+
+        success: function success(uploadFileRes) {
+          console.log(uploadFileRes.data);
+        },
+        complete: function complete(res) {
+          console.log(res);
+        } });
+
+    },
+    clk: function clk() {
+      this.$refs.avatar.fChooseImg('', {
+        selWidth: '350upx',
+        selHeight: '350upx',
+        expWidth: '260upx',
+        expHeight: '260upx',
+        inner: 'true' });
+
+    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
