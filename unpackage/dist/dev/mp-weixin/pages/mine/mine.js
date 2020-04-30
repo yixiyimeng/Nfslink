@@ -170,8 +170,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _api = __webpack_require__(/*! @/utils/api.js */ 34);var tuiActionsheet = function tuiActionsheet() {return __webpack_require__.e(/*! import() | components/actionsheet/actionsheet */ "components/actionsheet/actionsheet").then(__webpack_require__.bind(null, /*! @/components/actionsheet/actionsheet */ 88));};var _default =
+var _api = __webpack_require__(/*! @/utils/api.js */ 34);
 
+
+
+var _index = __webpack_require__(/*! @/utils/index.js */ 36);var tuiActionsheet = function tuiActionsheet() {return __webpack_require__.e(/*! import() | components/actionsheet/actionsheet */ "components/actionsheet/actionsheet").then(__webpack_require__.bind(null, /*! @/components/actionsheet/actionsheet */ 88));};var _default =
 
 
 {
@@ -183,14 +186,15 @@ var _api = __webpack_require__(/*! @/utils/api.js */ 34);var tuiActionsheet = fu
       tips: '退出登录会清除您的登录信息，确认退出吗？',
       itemList: [{
         text: "退出登录",
-        color: "#e53a37" }] };
+        color: "#e53a37" }],
 
+      avatarUrl: '' };
 
   },
   components: {
     tuiActionsheet: tuiActionsheet },
 
-  created: function created() {
+  onShow: function onShow() {
     this.init();
   },
   onPullDownRefresh: function onPullDownRefresh() {
@@ -203,6 +207,7 @@ var _api = __webpack_require__(/*! @/utils/api.js */ 34);var tuiActionsheet = fu
     init: function init() {
       this.stuinfo = uni.getStorageSync('stuinfo'); //关联学生信息
       this.userinfo = uni.getStorageSync('userinfo'); //账户信息
+      this.avatarUrl = _index.fileUrl + this.userinfo.picUrl;
     },
     openActionSheet: function openActionSheet() {var _this = this;
       setTimeout(function () {

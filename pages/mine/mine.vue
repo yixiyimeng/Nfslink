@@ -4,7 +4,7 @@
 		<view class="main">
 			<!-- 个人信息 -->
 			<div class="userinfo flex align-center" @tap="showDetails">
-				<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
+				<view class="cu-avatar round" :style="{backgroundImage: 'url('+avatarUrl+')'}"></view>
 				<view class="flex-sub">
 					<view class="flex">
 						<view class="name">{{userinfo.username}}</view>
@@ -67,6 +67,9 @@
 		api,
 		postajax
 	} from '@/utils/api.js'
+	import {
+		fileUrl
+	} from '@/utils/index.js'
 	export default {
 		data() {
 			return {
@@ -77,13 +80,14 @@
 				itemList: [{
 					text: "退出登录",
 					color: "#e53a37"
-				}]
+				}],
+				avatarUrl:''
 			};
 		},
 		components: {
 			tuiActionsheet
 		},
-		created() {
+		onShow() {
 			this.init();
 		},
 		onPullDownRefresh() {
@@ -96,6 +100,7 @@
 			init() {
 				this.stuinfo = uni.getStorageSync('stuinfo') //关联学生信息
 				this.userinfo = uni.getStorageSync('userinfo') //账户信息
+				this.avatarUrl=fileUrl+this.userinfo.picUrl;
 			},
 			openActionSheet() {
 				setTimeout(() => {

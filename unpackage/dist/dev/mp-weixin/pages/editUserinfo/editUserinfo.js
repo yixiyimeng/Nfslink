@@ -105,7 +105,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var avatar = function avatar() {return Promise.all(/*! import() | components/yq-avatar/yq-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/yq-avatar/yq-avatar")]).then(__webpack_require__.bind(null, /*! @/components/yq-avatar/yq-avatar.vue */ 95));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 
 
 
@@ -128,13 +128,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+var _api = __webpack_require__(/*! @/utils/api.js */ 34);
+
+
+
+
+var _index = __webpack_require__(/*! @/utils/index.js */ 36);var avatar = function avatar() {return Promise.all(/*! import() | components/yq-avatar/yq-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/yq-avatar/yq-avatar")]).then(__webpack_require__.bind(null, /*! @/components/yq-avatar/yq-avatar.vue */ 95));};var _default =
 
 
 {
   data: function data() {
     return {
       edit: false,
-      avatarUrl: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
+      avatarUrl: '',
       userinfo: {} };
 
   },
@@ -143,39 +152,74 @@ __webpack_require__.r(__webpack_exports__);
 
   onLoad: function onLoad() {
     this.userinfo = uni.getStorageSync('userinfo');
+    console.log(this.userinfo.picUrl);
+    this.avatarUrl = _index.fileUrl + this.userinfo.picUrl;
   },
   methods: {
     doBefore: function doBefore() {
 
     },
     doUpload: function doUpload(rsp) {
-      console.log(rsp);
       this.avatarUrl = rsp.path;
-      // this.$set(this.urls, rsp.index, rsp.path);
-      return;
-      uni.uploadFile({
-        url: '', //仅为示例，非真实的接口地址
-        filePath: rsp.path,
-        name: 'avatar',
-        formData: {
-          'avatar': rsp.path },
-
-        success: function success(uploadFileRes) {
-          console.log(uploadFileRes.data);
-        },
-        complete: function complete(res) {
-          console.log(res);
-        } });
+      this.uploadImg();
 
     },
     clk: function clk() {
-      this.$refs.avatar.fChooseImg('', {
-        selWidth: '350upx',
-        selHeight: '350upx',
-        expWidth: '260upx',
-        expHeight: '260upx',
-        inner: 'true' });
+      if (this.edit) {
+        this.$refs.avatar.fChooseImg('', {
+          selWidth: '350upx',
+          selHeight: '350upx',
+          expWidth: '260upx',
+          expHeight: '260upx',
+          inner: 'true' });
 
+      }
+    },
+    handle: function handle() {var _this = this;
+      if (this.edit) {
+        /* 提交数据 */
+        (0, _api.postajax)(_api.api.updatePeronal, this.userinfo).then(function (da) {
+          if (da.code == 0) {
+            uni.showToast({
+              title: '修改个人信息成功' });
+
+            _this.edit = !_this.edit;
+            uni.setStorageSync('userinfo', _this.userinfo);
+          }
+        });
+      } else {
+        this.edit = !this.edit;
+      }
+    },
+    uploadImg: function uploadImg() {
+      var that = this;
+      if (this.edit) {
+        wx.getFileSystemManager().readFile({
+          filePath: this.avatarUrl,
+          encoding: 'base64',
+          success: function success(res) {
+            // callBack(res.data);
+            (0, _api.postajax)(_api.api.uploadImg, {
+              file: 'data:image/png;base64,' + res.data,
+              fileName: new Date().getTime() + 'avatar.png' }).
+            then(function (da) {
+              if (da.code == 0) {
+                uni.showToast({
+                  title: '修改个人头像成功' });
+
+
+                that.edit = !that.edit;
+                that.userinfo['picUrl'] = da.picUrl;
+                uni.setStorageSync('userinfo', that.userinfo);
+              }
+            });
+          },
+          fail: function fail(err) {
+            console.log(err);
+          } });
+
+
+      }
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

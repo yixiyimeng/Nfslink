@@ -19,6 +19,8 @@ export const api = {
 	getDatePullList:'/inte/homeSchool/getDatePullList',
 	getSubjectList:'/inte/homeSchool/advanceProgressPullData',//获取进步趋势的科目
 	logout: '/plat/logout',
+	updatePeronal: '/plat/sys/user/updatePeronal',
+	uploadImg: '/plat/sys/user/uploadImg',
 }
 export function getajax(url) {
 	return $http.get(url)

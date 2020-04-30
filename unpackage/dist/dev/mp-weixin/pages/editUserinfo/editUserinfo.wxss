@@ -9,4 +9,22 @@
   font-weight: bold;
   font-size: 34rpx;
 }
+.btn {
+  background: #efefef;
+  color: #333;
+  width: 300rpx;
+  line-height: 80rpx;
+  display: block;
+  text-align: center;
+  margin: 40rpx auto 0;
+  border-radius: 100rpx;
+  font-size: 40rpx;
+}
+.btn.applyBtn {
+    color: #fff;
+    background: #4944ff;
+}
+.cu-form-group + .cu-form-group {
+  border-top: none;
+}
 
