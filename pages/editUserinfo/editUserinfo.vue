@@ -5,10 +5,10 @@
 			<view class="cu-avatar radius bg-gray" @click="clk" :style="{backgroundImage: 'url('+avatarUrl+')'}">
 			</view>
 		</view>
-		<view class="cu-form-group  cu-item">
+		<!-- <view class="cu-form-group  cu-item">
 			<view class="title">用户名</view>
 			<input type="text" :value="userinfo.username" :disabled="!edit">
-		</view>
+		</view> -->
 		<view class="cu-form-group  cu-item">
 			<view class="title">昵称</view>
 			<input type="text" v-model="userinfo.name" :disabled="!edit">
