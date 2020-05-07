@@ -64,7 +64,7 @@
 						<image src="/static/noData.png" mode="widthFix"></image>
 					</view>
 				</view>
-				<view class="more" v-if="topiclist.length>2" @tap="isOpen=!isOpen">{{isOpen?'收起':'查看更多>>'}}</view>
+				<view class="more" v-if="topiclist.length>5" @tap="isOpen=!isOpen">{{isOpen?'收起':'查看更多>>'}}</view>
 			</view>
 			<view class="bg-white mt15">
 				<view class="cu-bar">

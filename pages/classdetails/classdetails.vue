@@ -135,8 +135,7 @@
 								<image src="../../static/icon8.png" mode="widthFix" class="notice" v-if="playindex==index&&typeindex==0&&ispalying"></image>
 							</view>
 							<view class="flex-sub" @tap="playVideo(item.trueAnswer,index,1)">
-								<image src="../../static/icon6.png" mode="widthFix" class="notice" v-if='item.trueAnswer&&!(playindex==index&&typeindex==1&&ispalying)'
-								 ></image>
+								<image src="../../static/icon6.png" mode="widthFix" class="notice" v-if='item.trueAnswer&&!(playindex==index&&typeindex==1&&ispalying)'></image>
 								<image src="../../static/icon8.png" mode="widthFix" class="notice" v-if="item.trueAnswer&&(playindex==index&&typeindex==1&&ispalying)"></image>
 								<text v-if="!item.trueAnswer">--</text>
 							</view>
@@ -259,8 +258,7 @@
 				}];
 				Arcbar3.series = [{
 					name: '击败人数比',
-					"data": this.detail.defeatStuCount ? this.detail.defeatStuCount.slice(0, this.detail.defeatStuCount.length - 1) /
-						100 : 0,
+					"data": this.detail.defeatStuCount ? this.detail.defeatStuCount.slice(0, this.detail.defeatStuCount.length -1) /100 : 0,
 					"color": "#99c2cc"
 				}];
 				_self.showArcbar2("canvasArcbar2", Arcbar2);
@@ -276,7 +274,7 @@
 					fontSize: 11,
 					legend: false,
 					title: {
-						name: chartData.series[0].data * 100 + '%',
+						name: (chartData.series[0].data * 10000/100).toFixed(2) + '%',
 						color: '#e24545',
 						fontSize: 16 * _self.pixelRatio
 					},
@@ -311,7 +309,7 @@
 					fontSize: 11,
 					legend: false,
 					title: {
-						name: chartData.series[0].data * 100 + '%',
+						name: (chartData.series[0].data* 10000/100).toFixed(2) + '%',
 						color: chartData.series[0].color,
 						fontSize: 16 * _self.pixelRatio
 					},
@@ -563,7 +561,7 @@
 
 		.notice {
 			width: 34upx;
-		
+
 		}
 	}
 
