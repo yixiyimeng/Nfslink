@@ -1,0 +1,30 @@
+
+.view-page {
+	padding-top: 230rpx;
+}
+.tip {
+	color: #999;
+	text-align: center;
+	position: absolute;
+	bottom: 20rpx;
+	left: 0;
+	width: 100%;
+}
+.view-page image {
+	width: 427rpx;
+	display: block;
+	margin: 0 auto;
+}
+.view-page .btn {
+	color: #fff;
+	background: #4944ff;
+	width: 300rpx;
+	line-height: 80rpx;
+	display: block;
+	text-align: center;
+	margin: 40rpx auto 0;
+	border-radius: 100rpx;
+	font-size: 40rpx;
+}
+
+page::after{position:fixed;content:'';left:-1000px;top:-1000px;-webkit-animation:shadow-preload .1s;-webkit-animation-delay:3s;animation:shadow-preload .1s;animation-delay:3s}@-webkit-keyframes shadow-preload{0%{background-image:url(https://cdn.dcloud.net.cn/img/shadow-grey.png)}100%{background-image:url(https://cdn.dcloud.net.cn/img/shadow-grey.png)}}@keyframes shadow-preload{0%{background-image:url(https://cdn.dcloud.net.cn/img/shadow-grey.png)}100%{background-image:url(https://cdn.dcloud.net.cn/img/shadow-grey.png)}}

@@ -126,6 +126,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var _api = __webpack_require__(/*! @/utils/api.js */ 34); //
 //
 //
@@ -146,8 +147,8 @@ var _api = __webpack_require__(/*! @/utils/api.js */ 34); //
 //
 //
 //
-var _default = { data: function data() {return { focus: 0, username: '', password: '' };}, onLoad: function onLoad() {var loginParam = uni.getStorageSync('loginParam');this.username = loginParam.username;this.password = loginParam.password;}, methods: { focustxt: function focustxt(type) {this.focus = type;
-    },
+//
+var _default = { data: function data() {return { focus: 0, username: '', password: '' };}, onLoad: function onLoad() {var loginParam = uni.getStorageSync('loginParam');this.username = loginParam.username;this.password = loginParam.password;}, methods: { focustxt: function focustxt(type) {this.focus = type;},
     blurtxt: function blurtxt() {
       this.focus = 0;
     },

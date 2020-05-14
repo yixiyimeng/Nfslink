@@ -188,7 +188,20 @@ var _index = __webpack_require__(/*! @/utils/index.js */ 36);var tuiActionsheet 
         text: "退出登录",
         color: "#e53a37" }],
 
-      avatarUrl: '' };
+      avatarUrl: '',
+      menulist: [{
+        'name': '积分',
+        icon: '/static/icon9.png' },
+      {
+        'name': '设置',
+        icon: '/static/icon10.png' },
+      {
+        'name': '修改密码',
+        icon: '/static/icon11.png' },
+      {
+        'name': '关于家校通',
+        icon: '/static/icon12.png' }] };
+
 
   },
   components: {
@@ -226,7 +239,7 @@ var _index = __webpack_require__(/*! @/utils/index.js */ 36);var tuiActionsheet 
       (0, _api.postajax)(_api.api.logout).then(function (da) {
         if (da.code == 0) {
           uni.clearStorageSync();
-          uni.redirectTo({
+          uni.reLaunch({
             url: '/pages/login/login' });
 
 
@@ -239,6 +252,12 @@ var _index = __webpack_require__(/*! @/utils/index.js */ 36);var tuiActionsheet 
     showDetails: function showDetails() {
       uni.navigateTo({
         url: '/pages/editUserinfo/editUserinfo' });
+
+    },
+    gotopage: function gotopage() {
+      uni.showToast({
+        title: '敬请期待',
+        icon: 'none' });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

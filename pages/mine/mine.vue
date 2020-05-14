@@ -7,52 +7,52 @@
 				<view class="cu-avatar round" :style="{backgroundImage: 'url('+avatarUrl+')'}"></view>
 				<view class="flex-sub">
 					<view class="flex">
-						<view class="name">{{userinfo.username}}</view>
-						<view class="cu-tag bg-white round">{{userinfo.name}}</view>
+						<view class="name">{{userinfo.username||''}}</view>
+						<view class="cu-tag bg-white round">{{userinfo.name||''}}</view>
 					</view>
-					<view class="mt10">手机号：{{userinfo.mobile}}</view>
+					<view class="mt10">手机号：{{userinfo.mobile||''}}</view>
 
 				</view>
 				<text class="cuIcon-right"></text>
 			</div>
 			<!-- 学生信息 -->
 			<view class="stuinfo bg-white shadow">
-				<view class="stuname"><span>{{stuinfo.stuName}}</span></view>
+				<view class="stuname"><span>{{stuinfo.stuName||''}}</span></view>
 				<view class="flex align-center">
 					<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg)"></view>
 					<view class="line"></view>
 					<view class="flex-sub">
-						<view class="name">班级：{{stuinfo.className}}</view>
-						<view class="mt10">性别：{{stuinfo.sex==0?'男':'女'}}</view>
+						<view class="name">班级：{{stuinfo.className||''}}</view>
+						<view class="mt10">性别：{{stuinfo.sex==0?'男':(stuinfo.sex==1?'女':'')}}</view>
 
 					</view>
 				</view>
 			</view>
 			<view class="cu-list menu">
-				<view class="cu-item">
+				<view class="cu-item" v-for="(item,index) in menulist" :key="index" @tap="gotopage">
 					<view class="content align-center flex">
-						<image src="/static/icon9.png" class="png" mode="aspectFit"></image>
-						<text>积分</text>
+						<image :src="item.icon" class="png" mode="aspectFit"></image>
+						<text>{{item.name}}</text>
 					</view>
 				</view>
-				<view class="cu-item">
+				<!-- <view class="cu-item">
 					<view class="content align-center flex">
 						<image src="/static/icon10.png" class="png" mode="aspectFit"></image>
 						<text>设置</text>
 					</view>
 				</view>
 				<view class="cu-item">
-					<navigator class="content align-center flex" url="/pages/forgetpwd/forgetpwd" hover-class="none">
+					<view class="content align-center flex">
 						<image src="/static/icon11.png" class="png" mode="aspectFit"></image>
 						<text>修改密码</text>
-					</navigator>
+					</view>
 				</view>
 				<view class="cu-item">
 					<view class="content align-center flex">
 						<image src="/static/icon12.png" class="png" mode="aspectFit"></image>
 						<text>关于家校通</text>
 					</view>
-				</view>
+				</view> -->
 			</view>
 			<view class="exitBtn" @click='openActionSheet'>退出登录</view>
 			<tui-actionsheet :show="showActionSheet" :tips="tips" :item-list="itemList" :mask-closable="true" :is-cancel="true"
@@ -81,7 +81,20 @@
 					text: "退出登录",
 					color: "#e53a37"
 				}],
-				avatarUrl:''
+				avatarUrl: '',
+				menulist: [{
+					'name': '积分',
+					icon: '/static/icon9.png'
+				}, {
+					'name': '设置',
+					icon: '/static/icon10.png'
+				}, {
+					'name': '修改密码',
+					icon: '/static/icon11.png'
+				}, {
+					'name': '关于家校通',
+					icon: '/static/icon12.png'
+				}]
 			};
 		},
 		components: {
@@ -100,7 +113,7 @@
 			init() {
 				this.stuinfo = uni.getStorageSync('stuinfo') //关联学生信息
 				this.userinfo = uni.getStorageSync('userinfo') //账户信息
-				this.avatarUrl=fileUrl+this.userinfo.picUrl;
+				this.avatarUrl = fileUrl + this.userinfo.picUrl;
 			},
 			openActionSheet() {
 				setTimeout(() => {
@@ -119,7 +132,7 @@
 				postajax(api.logout).then((da) => {
 					if (da.code == 0) {
 						uni.clearStorageSync();
-						uni.redirectTo({
+						uni.reLaunch({
 							url: '/pages/login/login'
 						})
 
@@ -129,9 +142,15 @@
 			closeActionSheet: function() {
 				this.showActionSheet = false
 			},
-			showDetails(){
+			showDetails() {
 				uni.navigateTo({
-					url:'/pages/editUserinfo/editUserinfo'
+					url: '/pages/editUserinfo/editUserinfo'
+				})
+			},
+			gotopage(){
+				uni.showToast({
+					title:'敬请期待',
+					icon:'none'
 				})
 			}
 		}
@@ -176,7 +195,6 @@
 					color: #333;
 					font-size: 24upx;
 					line-height: 36upx;
-					margin-top: 5upx;
 				}
 
 				.cuIcon-right {

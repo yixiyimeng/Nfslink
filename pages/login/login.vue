@@ -6,7 +6,7 @@
 		<view class="group">
 			<view class="row flex align-center" :class="{ active: focus == 1 }">
 				<i class="user"></i>
-				<input type="text" class="flex-sub" @focus="focustxt(1)" @blur="blurtxt" placeholder="请输入手机号或者账户" v-model.lazy="username" />
+				<input type="text" class="flex-sub" @focus="focustxt(1)" @blur="blurtxt" placeholder="请输入学校预留手机号或者账户" v-model.lazy="username" />
 			</view>
 			<view class="row flex align-center" :class="{ active: focus == 2 }">
 				<i class="pwd"></i>
@@ -15,6 +15,7 @@
 			</view>
 			<view class="loginBtn" @tap="login">登录</view>
 		</view>
+		<view class="tip">该应用仅面向合作机构的特定用户开放</view>
 	</view>
 </template>
 
@@ -75,6 +76,14 @@
 </script>
 
 <style scoped lang="scss">
+	.tip{
+		color: #999;
+		text-align: center;
+		position: absolute;
+		bottom: 20upx;
+		left: 0;
+		width: 100%;
+	}
 	.view-page {
 		position: relative;
 		height: 100%;

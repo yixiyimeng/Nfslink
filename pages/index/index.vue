@@ -577,12 +577,24 @@
 					onShow: function onShow(ev) {
 						var items = ev.items;
 						console.log(items)
-						if (items.length >= 3) {
-							items[2].name = '综合正确率进步趋势';
+						for (var i = 0; i < items.length; i++) {
+							if (i % 2 == 0) {
+								items[i].name = '综合正确率';
+							} else {
+								items[i].name = '参与率';
+							}
 						}
-						if (items.length >= 4) {
-							items[3].name = '参与率进步趋势';
+						if (items.length == 3) {
+							items[3] = items[1]
 						}
+						// if (items.length >= 3) {
+						// 	items[0].name = '综合正确率';
+						// 	items[2].name = '综合正确率';
+						// }
+						// if (items.length >= 4) {
+						// 	items[1].name = '参与率';
+						// 	items[3].name = '参与率';
+						// }
 					}
 				});
 

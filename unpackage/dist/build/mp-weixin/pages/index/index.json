@@ -1,0 +1,6 @@
+{
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "ff-canvas": "/static/aibokalv-chart/f2-canvas"
+  }
+}

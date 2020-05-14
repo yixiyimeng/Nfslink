@@ -1,0 +1,167 @@
+.view-page.data-v-0a4be86d {
+  position: relative;
+  background: #f7f7fc;
+}
+.view-page .mt15.data-v-0a4be86d {
+    margin-top: 15rpx;
+}
+.view-page .userinfo.data-v-0a4be86d {
+    background: #81a3e2;
+    padding: 40rpx 36rpx 18rpx;
+    color: #fff;
+    font-size: 36rpx;
+}
+.view-page .userinfo .cu-avatar.data-v-0a4be86d {
+      border: 5rpx solid #fff;
+      height: 120rpx;
+      width: 120rpx;
+      margin-right: 22rpx;
+}
+.view-page .userinfo .name.data-v-0a4be86d {
+      font-size: 36rpx;
+}
+.view-page .userinfo .cu-tag.data-v-0a4be86d {
+      color: #333;
+      font-size: 30rpx;
+      line-height: 40rpx;
+      margin-top: 5rpx;
+}
+.view-page .rili.data-v-0a4be86d {
+    text-align: center;
+    font-size: 24rpx;
+}
+.view-page .rili .title.data-v-0a4be86d {
+      color: #333;
+      font-size: 34rpx;
+      line-height: 95rpx;
+      padding: 0 20rpx;
+}
+.view-page .rili .title .arrow.data-v-0a4be86d {
+        color: #999;
+        font-size: 42rpx;
+        padding: 0 10rpx;
+}
+.view-page .rili .rili-hd.data-v-0a4be86d {
+      background: #ececf2;
+      line-height: 50rpx;
+      color: #333;
+}
+.view-page .rili .rili-bd text.data-v-0a4be86d {
+      height: 70rpx;
+      width: 70rpx;
+      line-height: 70rpx;
+      border-radius: 100%;
+      display: block;
+      font-size: 26rpx;
+      margin: 24rpx auto;
+      background: #a49db7;
+      color: #fff;
+}
+.view-page .rili .rili-bd text.disable.data-v-0a4be86d {
+        background: #ececf2;
+        color: #333;
+}
+.view-page .rili .rili-bd text.active.data-v-0a4be86d {
+        background: #81a3e2;
+}
+.view-page .rili .rili-bd text.disable.active.data-v-0a4be86d {
+        opacity: .5;
+        color: #fff;
+}
+.view-page .main.data-v-0a4be86d {
+    margin-top: 16rpx;
+    -webkit-overflow-scrolling: touch;
+}
+.view-page .main .cu-bar .cuIcon-titles.data-v-0a4be86d {
+      color: #81a3e2;
+}
+.view-page .main .topiclist.data-v-0a4be86d {
+      padding: 0 15px;
+}
+.view-page .main .topiclist .topic-item.data-v-0a4be86d {
+        padding: 30rpx 0;
+        border-top: 1px solid #f7f7fc;
+        font-size: 28rpx;
+        color: #333;
+}
+.view-page .main .topiclist .topic-item.data-v-0a4be86d:last-child {
+          border-bottom: 1px solid #f7f7fc;
+}
+.view-page .main .topiclist .topic-item .name.data-v-0a4be86d {
+          color: #fff;
+          background: #e281b6;
+          border-radius: 100%;
+          height: 70rpx;
+          width: 70rpx;
+          text-align: center;
+          line-height: 70rpx;
+          margin-right: 15rpx;
+          overflow: hidden;
+          white-space: nowrap;
+          -o-text-overflow: ellipsis;
+             text-overflow: ellipsis;
+}
+.view-page .main .topiclist .topic-item:nth-child(3n+2) .name.data-v-0a4be86d {
+          background: #81a3e2;
+}
+.view-page .main .topiclist .topic-item:nth-child(3n+3) .name.data-v-0a4be86d {
+          background: #af81e2;
+}
+.view-page .main .topiclist .topic-item .ft40.data-v-0a4be86d {
+          font-size: 40rpx;
+          line-height: 30rpx;
+}
+.view-page .main .topiclist .topic-item .ft20.data-v-0a4be86d {
+          font-size: 20rpx;
+}
+.view-page .main .more.data-v-0a4be86d {
+      color: #333;
+      font-size: 24rpx;
+      text-align: center;
+      line-height: 60rpx;
+}
+.view-page .main .navbar.data-v-0a4be86d {
+      padding: 25rpx 30rpx 0;
+      font-size: 28rpx;
+      white-space: nowrap;
+      overflow: auto;
+      color: #333;
+}
+.view-page .main .navbar ._span.data-v-0a4be86d {
+        padding: 0 24rpx;
+        line-height: 46rpx;
+        margin: 0 10rpx;
+        display: inline-block;
+        border-radius: 50rpx;
+}
+.view-page .main .navbar ._span.active.data-v-0a4be86d {
+          color: #fff;
+          background: #81a3e2;
+}
+.view-page .main .shadow.data-v-0a4be86d {
+      -webkit-box-shadow: 0 0 8rpx rgba(0, 0, 0, 0.2);
+              box-shadow: 0 0 8rpx rgba(0, 0, 0, 0.2);
+}
+.view-page .main .selectTime.data-v-0a4be86d {
+      border: 1px solid #f2f2f4;
+      border-radius: 10rpx;
+      line-height: 50rpx;
+      color: #666;
+      font-size: 24rpx;
+      padding: 0 10rpx 0 20rpx;
+}
+.view-page .main .selectTime image.data-v-0a4be86d {
+        width: 25rpx;
+        margin-left: 20rpx;
+}
+.view-page .charts.data-v-0a4be86d {
+    width: 750rpx;
+    height: 500rpx;
+    background-color: #FFFFFF;
+    position: relative;
+}
+.view-page .chart-container.data-v-0a4be86d {
+    width: 100%;
+    height: 500rpx;
+}
+

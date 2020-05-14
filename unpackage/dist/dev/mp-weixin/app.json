@@ -13,7 +13,7 @@
   "subPackages": [],
   "window": {
     "navigationBarBackgroundColor": "#fcf9f0",
-    "navigationBarTitleText": "家校通",
+    "navigationBarTitleText": "掌上家校",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -36,6 +36,5 @@
       }
     ]
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap88.json"
+  "usingComponents": {}
 }

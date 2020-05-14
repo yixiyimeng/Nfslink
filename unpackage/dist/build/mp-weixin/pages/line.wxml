@@ -1,0 +1,1 @@
+<view class="page_chart"><view class="chart-container _div"><ff-canvas vue-id="1" id="column" canvas-id="column" opts="{{opts}}" data-com-type="wx" bind:__l="__l"></ff-canvas></view></view>

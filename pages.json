@@ -75,11 +75,11 @@
 	"globalStyle": {
 		"mp-alipay": {
 			/* 支付宝小程序特有相关 */
-			"transparentTitle": "家校通",
+			"transparentTitle": "掌上家校",
 			"allowsBounceVertical": "NO"
 		},
 		"navigationBarBackgroundColor": "#fcf9f0",
-		"navigationBarTitleText": "家校通",
+		"navigationBarTitleText": "掌上家校",
 		"navigationBarTextStyle": "black"
 	},
 	"usingComponts": true,

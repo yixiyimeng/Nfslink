@@ -93,8 +93,8 @@ export function base64ToString(data) {
 		throw Components.Exception('Corrupted base64 string');
 	return result;
 }
-export const basePath='http://113.57.172.27:8880/platform-face'
-export const fileUrl='http://113.57.172.27:8880/platform-face'
+export const basePath='https://www.edu.zkxltech.com/platform-face/'
+export const fileUrl='https://www.edu.zkxltech.com/platform-face'
 export default {
 	formatNumber,
 	formatTime,
